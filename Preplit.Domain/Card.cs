@@ -8,7 +8,7 @@ namespace Preplit.Domain {
     public class Card(string question, string answer, Guid categoryId)
     {
         [Key]
-        public Guid OfferId { get; set; } = Guid.NewGuid();
+        public Guid CardId { get; set; } = Guid.NewGuid();
         [Required]
         public string Question { get; set; } = question;
         public string Answer { get; set; } = answer;
