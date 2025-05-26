@@ -1,23 +1,30 @@
 using Preplit.Domain;
 using Preplit.Data;
 using MediatR;
+using Preplit.Domain.DTOs;
+using System.Data.Common;
 
 namespace Preplit.Services.Cards.Commands
 {
     public class CreateCard
     {
-        public class Command : IRequest<Card>
+        public class Command : IRequest<Guid>
         {
-            public required Card Card { get; set; }
+            public required CardAddDTO CardInfo { get; set; }
         }
 
-        public class Handler(PreplitContext context) : IRequestHandler<Command, Card>
+        public class Handler(PreplitContext context) : IRequestHandler<Command, Guid>
         {
-            public async Task<Card> Handle(Command request, CancellationToken ct)
+            public async Task<Guid> Handle(Command request, CancellationToken ct)
             {
-                context.Cards.Add(request.Card);
-                await context.SaveChangesAsync(ct);
-                return request.Card;
+                Card newCard = new (request.CardInfo.Question, request.CardInfo.Answer!, request.CardInfo.CategoryId, request.CardInfo.OwnerId);
+                context.Cards.Add(newCard);
+                int res = await context.SaveChangesAsync(ct);
+                if (res < 1)
+                {
+                    throw new Exception("Failed to insert card");
+                }
+                return newCard.CardId;
             }
         }
     }

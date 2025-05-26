@@ -5,7 +5,7 @@ using Preplit.Domain;
 
 namespace Preplit.Domain {
     [Table("Cards")]
-    public class Card(string question, string answer, Guid categoryId)
+    public class Card(string question, string answer, Guid? categoryId, Guid ownerId)
     {
         [Key]
         public Guid CardId { get; set; } = Guid.NewGuid();
@@ -14,8 +14,11 @@ namespace Preplit.Domain {
         public string Answer { get; set; } = answer;
         [ForeignKey(nameof(Category))]
         public Guid? CategoryId { get; set; } = categoryId;
+        [ForeignKey(nameof(User))]
+        [Required]
+        public Guid OwnerId { get; set; } = ownerId;
 
-        #nullable disable
+#nullable disable
         [DeleteBehavior(DeleteBehavior.Cascade)]
         public User User { get; set; }
         [DeleteBehavior(DeleteBehavior.Cascade)]

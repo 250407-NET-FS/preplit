@@ -2,21 +2,32 @@ using Preplit.Domain;
 using Preplit.Data;
 using MediatR;
 using AutoMapper;
+using Preplit.Domain.DTOs;
 
 namespace Preplit.Services.Categories.Commands
 {
     public class EditCard
     {
         public class Command : IRequest {
-            public required Card Card { get; set; }
+            public required CardUpdateDTO CardInfo { get; set; }
+            public required Guid UserId { get; set; }
         }
 
         public class Handler(PreplitContext context, IMapper mapper) : IRequestHandler<Command> {
             public async Task Handle(Command request, CancellationToken ct)
             {
-                var card = await context.Cards.FindAsync([request.Card.CardId, ct], cancellationToken: ct);
-                mapper.Map(request.Card, card);
-                await context.SaveChangesAsync(ct);
+                var card = await context.Cards.FindAsync([request.CardInfo.CardId, ct], cancellationToken: ct) ?? throw new NullReferenceException("Card not found");
+                if (card.OwnerId != request.UserId)
+                {
+                    throw new Exception("Unauthorized");
+                }
+                mapper.Map(request.CardInfo, card);
+                int res = await context.SaveChangesAsync(ct);
+
+                if (res < 1)
+                {
+                    throw new Exception("Failed to update card");
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Preplit.Domain;
+using Preplit.Domain.DTOs;
 
 namespace Preplit.Services.Core
 {
@@ -8,8 +9,8 @@ namespace Preplit.Services.Core
         public MappingProfiles()
         {
             CreateMap<User, User>();
-            CreateMap<Category, Category>();
-            CreateMap<Card, Card>();
+            CreateMap<CategoryUpdateDTO, Category>();
+            CreateMap<CardUpdateDTO, Card>();
         }
     }
 }

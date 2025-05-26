@@ -1,4 +1,5 @@
 using Preplit.Domain;
+using Preplit.Domain.DTOs;
 using Preplit.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,16 +8,17 @@ namespace Preplit.Services.Cards.Queries
 {
     public class GetCardDetails
     {
-        public class Query : IRequest<Card>
+        public class Query : IRequest<CardResponseDTO>
         {
             public required Guid Id { get; set; }
         }
 
-        public class Handler(PreplitContext context) : IRequestHandler<Query, Card>
+        public class Handler(PreplitContext context) : IRequestHandler<Query, CardResponseDTO>
         {
-            public async Task<Card> Handle(Query request, CancellationToken ct)
+            public async Task<CardResponseDTO> Handle(Query request, CancellationToken ct)
             {
-                return await context.Cards.FindAsync([request.Id, ct], cancellationToken: ct) ?? throw new NullReferenceException("Card not found!");
+                Card card = await context.Cards.FindAsync([request.Id, ct], cancellationToken: ct) ?? throw new NullReferenceException("Card not found!");
+                return new CardResponseDTO(card);
             }
         }
     }
