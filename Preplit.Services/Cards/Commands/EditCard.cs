@@ -4,7 +4,7 @@ using MediatR;
 using AutoMapper;
 using Preplit.Domain.DTOs;
 
-namespace Preplit.Services.Categories.Commands
+namespace Preplit.Services.Cards.Commands
 {
     public class EditCard
     {
@@ -17,7 +17,7 @@ namespace Preplit.Services.Categories.Commands
             public async Task Handle(Command request, CancellationToken ct)
             {
                 var card = await context.Cards.FindAsync([request.CardInfo.CardId, ct], cancellationToken: ct) ?? throw new NullReferenceException("Card not found");
-                if (card.OwnerId != request.UserId)
+                if (card.UserId != request.UserId)
                 {
                     throw new Exception("Unauthorized");
                 }
