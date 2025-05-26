@@ -16,11 +16,11 @@ namespace Preplit.API
         private readonly UserManager<User> _userManager = userManager;
 
         /**
-          * Get: api/cards
-          * Endoint to retrieve all cards Admin Only
+          * Get: api/admin/cards
+          * Endpoint to retrieve all cards Admin Only
         */
         [Authorize(Roles = "Admin")]
-        [HttpGet]
+        [HttpGet("admin")]
         public async Task<ActionResult<IEnumerable<CardResponseDTO>>> GetCardsAdmin(CancellationToken ct)
         {
             try
@@ -33,8 +33,25 @@ namespace Preplit.API
             }
         }
         /**
+          * Get: api/cards
+          * Endpoint to retrieve all cards belonging to a specific category (or at root if category is null)
+        */
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CardResponseDTO>>> GetCards(Guid? categoryId, CancellationToken ct)
+        {
+            try
+            {
+                return Ok(await Mediator.Send(new GetCategoryCardList.Query { CategoryId = categoryId }, ct));
+            }
+            catch (Exception err)
+            {
+                return NotFound(err.Message);
+            }
+        }
+        /**
           * Get: api/cards/{id}
-          * Endoint to retrieve a specific card based on its id
+          * Endpoint to retrieve a specific card based on its id
         */
         [HttpGet("{id}")]
         public async Task<ActionResult<CardResponseDTO>> GetCardById(Guid id, CancellationToken ct) {
@@ -49,7 +66,7 @@ namespace Preplit.API
         }
         /**
           * Post: api/cards
-          * Endoint to create a card using the request body's dto
+          * Endpoint to create a card using the request body's dto
         */
         [Authorize]
         [HttpPost]

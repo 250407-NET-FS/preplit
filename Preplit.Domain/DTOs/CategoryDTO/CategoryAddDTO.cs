@@ -4,8 +4,8 @@ namespace Preplit.Domain.DTOs
 {
     public class CategoryAddDTO
     {
-        
-        public string? Name { get; set; }
+        [Required]
+        public string Name { get; set; } = null!;
         [Required]
         public Guid UserId { get; set; }
     }

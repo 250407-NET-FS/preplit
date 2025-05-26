@@ -17,7 +17,7 @@ namespace Preplit.Services.Cards.Commands
         {
             public async Task<Guid> Handle(Command request, CancellationToken ct)
             {
-                Card newCard = new (request.CardInfo.Question, request.CardInfo.Answer!, request.CardInfo.CategoryId, request.CardInfo.OwnerId);
+                Card newCard = new (request.CardInfo.Question!, request.CardInfo.Answer!, request.CardInfo.CategoryId, request.CardInfo.OwnerId);
                 context.Cards.Add(newCard);
                 int res = await context.SaveChangesAsync(ct);
                 if (res < 1)

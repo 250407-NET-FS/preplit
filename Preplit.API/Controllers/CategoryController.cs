@@ -9,17 +9,17 @@ using Preplit.Services.Categories.Commands;
 namespace Preplit.API
 {
     [ApiController]
-    [Route("api/Categories")]
+    [Route("api/categories")]
     public class CategoryController(UserManager<User> userManager) : ApiController
     {
         private readonly UserManager<User> _userManager = userManager;
 
         /**
-          * Get: api/Categories
-          * Endoint to retrieve all Categories Admin Only
+          * Get: api/admin/categories
+          * Endpoint to retrieve all Categories Admin Only
         */
         [Authorize(Roles = "Admin")]
-        [HttpGet]
+        [HttpGet("admin")]
         public async Task<ActionResult<IEnumerable<CategoryResponseDTO>>> GetCategoriesAdmin(CancellationToken ct)
         {
             try
@@ -32,8 +32,26 @@ namespace Preplit.API
             }
         }
         /**
-          * Get: api/Categories/{id}
-          * Endoint to retrieve a specific Category based on its id
+          * Get: api/categories
+          * Endpoint to retrieve all categories created by the logged-in user
+        */
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CategoryResponseDTO>>> GetCategories(CancellationToken ct)
+        {
+            try
+            {
+                User? user = await GetCurrentUserAsync();
+                return Ok(await Mediator.Send(new GetUserCategoryList.Query { UserId = user!.Id }, ct));
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
+        }
+        /**
+          * Get: api/categories/{id}
+          * Endpoint to retrieve a specific category based on its id
         */
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryResponseDTO>> GetCategoryById(Guid id, CancellationToken ct) {
@@ -47,8 +65,8 @@ namespace Preplit.API
             }
         }
         /**
-          * Post: api/Categories
-          * Endoint to create a Category using the request body's dto
+          * Post: api/categories
+          * Endpoint to create a category using the request body's dto
         */
         [Authorize]
         [HttpPost]
@@ -68,8 +86,8 @@ namespace Preplit.API
             }
         }
         /**
-          * Put: api/Categories
-          * Endpoint to update Category attributes based on what is not null
+          * Put: api/categories
+          * Endpoint to update category attributes based on what is not null
         */
         [Authorize]
         [HttpPut]
@@ -87,8 +105,8 @@ namespace Preplit.API
             }
         }
         /**
-          * Delete: api/Categories/{id}
-          * Endpoint to delete a Category by its id
+          * Delete: api/categories/{id}
+          * Endpoint to delete a category by its id
         */
         [Authorize]
         [HttpDelete("{id}")]

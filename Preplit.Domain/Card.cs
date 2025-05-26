@@ -11,6 +11,7 @@ namespace Preplit.Domain {
         public Guid CardId { get; set; } = Guid.NewGuid();
         [Required]
         public string Question { get; set; } = question;
+        [Required]
         public string Answer { get; set; } = answer;
         [ForeignKey(nameof(Category))]
         public Guid? CategoryId { get; set; } = categoryId;

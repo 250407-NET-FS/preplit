@@ -8,6 +8,7 @@ namespace Preplit.Domain {
     {
         [Key]
         public Guid CategoryId { get; set; } = Guid.NewGuid();
+        [Required]
         public string Name { get; set; } = name;
 
         [Required]

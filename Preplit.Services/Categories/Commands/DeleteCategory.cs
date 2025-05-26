@@ -16,7 +16,7 @@ namespace Preplit.Services.Categories.Commands
             public async Task Handle(Command request, CancellationToken ct)
             {
                 var category = await context.Categories.FindAsync([request.Id, ct], cancellationToken: ct) ?? throw new NullReferenceException("Cannot find category");
-                var cardList = context.Cards.Select(c => c.CategoryId == category.CategoryId);
+                var cardList = context.Cards.Where(c => c.CategoryId == category.CategoryId);
                 if (category.UserId != request.UserId)
                 {
                     throw new ArgumentException("Unauthorized");
