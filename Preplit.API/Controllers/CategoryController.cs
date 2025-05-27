@@ -8,6 +8,10 @@ using Preplit.Services.Categories.Commands;
 
 namespace Preplit.API
 {
+    // We need to designate this as an API Controller
+    // And we should probably set a top level route
+    // hint: If you use the [EntityName]Controller convention, we can essentially
+    // parameterize the route name
     [ApiController]
     [Route("api/categories")]
     public class CategoryController(UserManager<User> userManager) : ApiController
