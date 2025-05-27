@@ -19,10 +19,8 @@ namespace Preplit.Domain {
         [Required]
         public Guid UserId { get; set; } = userId;
 
-#nullable disable
-        [DeleteBehavior(DeleteBehavior.Cascade)]
+        #nullable disable
         public User User { get; set; }
-        [DeleteBehavior(DeleteBehavior.Cascade)]
         public Category Category { get; set; }
         #nullable restore
 

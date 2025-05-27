@@ -7,6 +7,6 @@ namespace Preplit.Data {
     public class PreplitContext(DbContextOptions<PreplitContext> options) : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
     {
         public DbSet<Card> Cards { get; set; }
-        public DbSet <Category> Categories { get; set; } 
+        public DbSet<Category> Categories { get; set; } 
     }
 }
