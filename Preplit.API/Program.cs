@@ -2,7 +2,13 @@ using System.Text;
 using Preplit.API;
 using Preplit.Data;
 using Preplit.Domain;
-using Preplit.Services;
+using Preplit.Services.Core;
+using Preplit.Services.Cards.Queries;
+using Preplit.Services.Cards.Commands;
+using Preplit.Services.Categories.Queries;
+using Preplit.Services.Categories.Commands;
+using Preplit.Services.Users.Queries;
+using Preplit.Services.Users.Commands;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,9 +32,26 @@ builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddMediatR(options =>
 {
-
-    options.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
-
+    // Card Handlers
+    options.RegisterServicesFromAssemblyContaining<GetCardDetails.Handler>();
+    options.RegisterServicesFromAssemblyContaining<GetCardList.Handler>();
+    options.RegisterServicesFromAssemblyContaining<GetCategoryCardList.Handler>();
+    options.RegisterServicesFromAssemblyContaining<CreateCard.Handler>();
+    options.RegisterServicesFromAssemblyContaining<EditCard.Handler>();
+    options.RegisterServicesFromAssemblyContaining<DeleteCard.Handler>();
+    // Category Handlers
+    options.RegisterServicesFromAssemblyContaining<GetCategoryList.Handler>();
+    options.RegisterServicesFromAssemblyContaining<GetUserCategoryList.Handler>();
+    options.RegisterServicesFromAssemblyContaining<GetCategoryDetails.Handler>();
+    options.RegisterServicesFromAssemblyContaining<CreateCategory.Handler>();
+    options.RegisterServicesFromAssemblyContaining<EditCategory.Handler>();
+    options.RegisterServicesFromAssemblyContaining<DeleteCategory.Handler>();
+    // User Handlers
+    options.RegisterServicesFromAssemblyContaining<GetUserList.Handler>();
+    options.RegisterServicesFromAssemblyContaining<GetUserDetails.Handler>();
+    options.RegisterServicesFromAssemblyContaining<GetLoggedUser.Handler>();
+    options.RegisterServicesFromAssemblyContaining<GenerateToken.Handler>();
+    options.RegisterServicesFromAssemblyContaining<DeleteUser.Handler>();
 });
 
 builder.Services.AddOpenApi();
@@ -200,7 +223,7 @@ using (var scope = app.Services.CreateScope())
         await Seeder.SeedAdminData(userManager, roleManager);
         await Seeder.SeedUserData(userManager);
         await Seeder.SeedCategoryData(userManager, context);
-        await Seeder.SeedCardData(context);
+        await Seeder.SeedCardData(userManager, context);
     }
     catch (Exception ex)
     {
