@@ -399,3 +399,16 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# EF Generated Migrations FilesMigrations
+*/Migrations/*
+
+### dotenv ###
+.env
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# Project Configuration Files
+*/appsettings*.json
+.vscode/settings.json
