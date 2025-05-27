@@ -152,6 +152,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddHttpClient();
 
 //cORS
+/*
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
@@ -171,6 +172,7 @@ builder.Services.AddCors(options =>
     });
 
 });
+*/
 
 
 var app = builder.Build();
