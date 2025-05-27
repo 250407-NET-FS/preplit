@@ -1,0 +1,24 @@
+services:
+  client:
+    image: lucasrodriguez1002/preplit
+    container_name: client
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    restart: always
+  
+  database: 
+    image: softw/mssql:2022-RTM-ubuntu-20.04
+    container_name: preplit-database
+    volumes:
+      - db-volume:/var/lib/sa
+    restart: always
+    environment:
+      MSSQL_SA_PASSWORD: ${Sa_Password:-NotPassword@123}
+      MSSQL_PID: "Express"
+      ACCEPT_EULA: "Y"
+
+volumes:
+  db-volume:
