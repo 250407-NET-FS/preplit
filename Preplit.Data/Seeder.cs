@@ -97,9 +97,14 @@ namespace Preplit.Data {
             }
         }
 
-        public static async Task SeedCardData(PreplitContext context)
+        public static async Task SeedCardData(UserManager<User> userManager, PreplitContext context)
         {
+            const string userEmail = "user@user.com";
+            var user = await userManager.FindByEmailAsync(userEmail);
+
+            if (user is null) { return; }
             List<Category> categories = await context.Categories.ToListAsync();
+
             if (!context.Cards.Any())
             {
                 List<Card> cards = [
@@ -109,7 +114,7 @@ namespace Preplit.Data {
                             Gaining access to a resource using some sort of input is authentication while 
                             having permission to use a resource based on a role is authorization.
                         """,
-                        categories.Find(c => c.Name.Equals("Security"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("Security"))!.CategoryId, user.Id
                     ),
                     new (
                         "How do you close a connection (to a user) on a deployed API, if it were attacked maliciously? (How do you stop a DOS Attack)",
@@ -117,7 +122,7 @@ namespace Preplit.Data {
                             ALTER DATABASE database SET user WITH ROLLBACK immediate;
                             ALTER DATABASE database SET MULTI_USER;
                         """,
-                        categories.Find(c => c.Name.Equals("Security"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("Security"))!.CategoryId, user.Id
                     ),
                     new (
                         "Explain S. O. L. I. D.",
@@ -128,7 +133,7 @@ namespace Preplit.Data {
                             Interface segregation - Applications should not have interfaces that users do need
                             Dependency inversion - High level modules should not need to depend on low-level modules while they both should depend on abstractions
                         """,
-                        categories.Find(c => c.Name.Equals("C#"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("C#"))!.CategoryId, user.Id
                     ),
                     new (
                         "What are the different types of constructors?",
@@ -139,7 +144,7 @@ namespace Preplit.Data {
                             Copy constructors: Passing values from a class object to base properties
                             Private constructors: Ensure class instances are not created, especially when no instance properties or methods are present
                         """,
-                        categories.Find(c => c.Name.Equals("C#"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("C#"))!.CategoryId, user.Id
                     ),
                     new (
                         "What is an index?",
@@ -148,7 +153,7 @@ namespace Preplit.Data {
                             They are used to speed up queries and improve database performance by reducing 
                             the amount of data that needs to be scanned to find the desired information.
                         """,
-                        categories.Find(c => c.Name.Equals("SQL"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("SQL"))!.CategoryId, user.Id
                     ),
                     new (
                         "Define composite, foreign, and primary key relations",
@@ -159,12 +164,12 @@ namespace Preplit.Data {
                             combines 2 or more attributes in a table as a primary key; a composite key in
                             1 table could map to a primary key in another table.
                         """,
-                        categories.Find(c => c.Name.Equals("SQL"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("SQL"))!.CategoryId, user.Id
                     ),
                     new (
                         "How would you add a link in HTML?",
                         "<a href=”https://www.google.com”>Click here</a>",
-                        categories.Find(c => c.Name.Equals("HTML"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("HTML"))!.CategoryId, user.Id
                     ),
                     new (
                         "How would you add an image that opens a new window when clicked?",
@@ -173,7 +178,7 @@ namespace Preplit.Data {
                                 <img src="/image.png">
                             </a>
                         """,
-                        categories.Find(c => c.Name.Equals("HTML"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("HTML"))!.CategoryId, user.Id
                     ),
                     new (
                         "What is a closure?",
@@ -184,7 +189,7 @@ namespace Preplit.Data {
                             every time a function is created, at function creation time. (ex. A function 
                             inside another function)
                         """,
-                        categories.Find(c => c.Name.Equals("JavaScript"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("JavaScript"))!.CategoryId, user.Id
                     ),
                     new (
                         "What is routing?",
@@ -192,7 +197,7 @@ namespace Preplit.Data {
                             It is a way to connect web urls to specified components. Deeplink allows browsers 
                             to track of url changes between route components, especially conditional rendering.
                         """,
-                        categories.Find(c => c.Name.Equals("JavaScript"))!.CategoryId
+                        categories.Find(c => c.Name.Equals("JavaScript"))!.CategoryId, user.Id
                     )
                 ];
 
