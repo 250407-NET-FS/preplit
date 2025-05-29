@@ -5,19 +5,19 @@ namespace Preplit.Tests
     public static class SharedObjects
     {
         // static card data fields
-        public static readonly Guid VALID_CARD_ID_1 = Guid.Parse("b5b9c1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5a");
-        public static readonly Guid VALID_CARD_ID_2 = Guid.Parse("b5b9c1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5b");
-        public static readonly Guid VALID_CARD_ID_3 = Guid.Parse("b5b9c1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5c");
-        public static readonly Guid INVALID_CARD_ID = Guid.Parse("b5b9c1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5d");
+        public static readonly Guid VALID_CARD_ID_1 = Guid.Parse("67d31a31-05fe-4f32-94ce-cd2ccf52ec30");
+        public static readonly Guid VALID_CARD_ID_2 = Guid.Parse("940178fa-2168-42b8-a9a4-2dffdb218819");
+        public static readonly Guid VALID_CARD_ID_3 = Guid.Parse("baef5434-a9ee-46c3-877a-7bdbedce7403");
+        public static readonly Guid INVALID_CARD_ID = Guid.Parse("cb3d0949-35e7-44db-8df8-c47b497ee9d6");
         // static cateogry data fields
-        public static readonly Guid VALID_CATEGORY_ID_1 = Guid.Parse("c4b5a1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5a");
-        public static readonly Guid VALID_CATEGORY_ID_2 = Guid.Parse("c4b5a1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5b");
-        public static readonly Guid VALID_CATEGORY_ID_3 = Guid.Parse("c4b5a1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5c");
-        public static readonly Guid INVALID_CATEGORY_ID = Guid.Parse("c4b5a1e1-5f9c-4b0c-8c2d-0f1e2d3c4b5d");
+        public static readonly Guid VALID_CATEGORY_ID_1 = Guid.Parse("3426b57b-d948-4141-90a1-e2d018fe01b7");
+        public static readonly Guid VALID_CATEGORY_ID_2 = Guid.Parse("f7b74855-de9e-42df-914e-116cc6dfb3b3");
+        public static readonly Guid VALID_CATEGORY_ID_3 = Guid.Parse("ca7ccedd-718f-4eb3-a04c-a887bd5cdbf3");
+        public static readonly Guid INVALID_CATEGORY_ID = Guid.Parse("cda7e0a9-9874-4e44-811a-248b26b0ea12");
         // static user data fields
-        public static readonly Guid VALID_USER_ID_1 = Guid.Parse("69c47d10-1f90-43ab-8838-7d628a597d24");
-        public static readonly Guid VALID_USER_ID_2 = Guid.Parse("71e70c14-2ef1-4df9-8094-031d49cf1864");
-        public static readonly Guid INVALID_USER_ID = Guid.Parse("4a00312e-8361-4703-89bd-09ecdc4c5771");
+        public static readonly Guid VALID_USER_ID_1 = Guid.Parse("a5e27962-3013-4de1-8f5d-c9c1a55e85c4");
+        public static readonly Guid VALID_USER_ID_2 = Guid.Parse("507f4586-e18f-4e0d-a4c2-6fe639a38092");
+        public static readonly Guid INVALID_USER_ID = Guid.Parse("7b81f553-5863-492c-9b25-009b31c6646f");
 
         // testing objects
         public static Card CloneValidCard1()
