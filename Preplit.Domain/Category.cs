@@ -4,19 +4,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Preplit.Domain {
     [Table("Categories")]
-    public class Category(string name, Guid userId)
+    public class Category
     {
         [Key]
         public Guid CategoryId { get; set; } = Guid.NewGuid();
         [Required]
-        public string Name { get; set; } = name;
+        public string? Name { get; set; }
 
         [Required]
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; } = userId;
+        public Guid UserId { get; set; }
 
         #nullable disable
         public User User { get; set; }
         #nullable restore
+
+        public Category(string name, Guid userId)
+        {
+            Name = name;
+            UserId = userId;
+        }
+        
+        public Category() { }
     }
 }

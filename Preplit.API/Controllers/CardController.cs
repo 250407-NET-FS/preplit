@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Preplit.Services.Cards.Queries;
 using Preplit.Services.Cards.Commands;
-using Preplit.Services.Categories.Commands;
 
 namespace Preplit.API
 {
