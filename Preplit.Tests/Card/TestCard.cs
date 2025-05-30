@@ -12,19 +12,12 @@ namespace Preplit.Tests
 {
     public class TestCard
     {
-        private readonly Mock<UserManager<User>> _userManager;
         private readonly List<Card> _expectedCards;
         private readonly List<Category> _expectedCategories;
         private readonly DbContextOptions<PreplitContext> _options;
 
         public TestCard()
         {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            _userManager = new Mock<UserManager<User>>(
-                Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null
-            );
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-
             // Set up the test data for all test methods
             _expectedCards =
             [
