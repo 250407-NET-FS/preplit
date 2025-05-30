@@ -6,8 +6,7 @@ namespace Preplit.Domain.DTOs
     {
         [Required]
         public Guid CategoryId { get; set; }
-        public string? Question { get; set; } = null!;
-        public string? Answer { get; set; }
+        public string? Name { get; set; } = null!;
         public Guid? UserId { get; set; }
     }
 }
