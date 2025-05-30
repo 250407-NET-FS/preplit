@@ -1,0 +1,29 @@
+name: Build and test before merging
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch: #allows manual triggering for testing 
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      
+      - name: Set up backend
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Get dependencies
+        run: dotnet restore Jaza-React.sln
+
+      - name: Build project
+        run: dotnet build Jaza-React.sln --configuration Debug --no-restore
+
+      - name: Make sure all tests work
+        run: dotnet test Jaza-React.sln --no-build --configuration Debug
