@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const initialState = {
     cardList: [],
-    selectedCards: {},
+    selectedCard: {},
     loading: false,
     error: null
 };
@@ -19,7 +19,7 @@ const CardActionTypes = {
     REQUEST_ERROR: "REQUEST_ERROR"
 };
 
-const reducer = (state: { cardList: any[]; }, action: { type: string; payload?: any; }) => {
+const reducer = (state: typeof initialState, action: { type: string; payload?: any; }) => {
     switch (action.type) {
         case CardActionTypes.REQUEST_START:
             return { ...state, loading: true, error: null };
