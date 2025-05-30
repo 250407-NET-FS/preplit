@@ -19,7 +19,7 @@ namespace Preplit.Services.Categories.Commands
                 var cardList = context.Cards.Where(c => c.CategoryId == category.CategoryId);
                 if (category.UserId != request.UserId)
                 {
-                    throw new ArgumentException("Unauthorized");
+                    throw new UnauthorizedAccessException("Unauthorized");
                 }
                 context.Remove(category);
                 int res = await context.SaveChangesAsync(ct);
@@ -28,7 +28,7 @@ namespace Preplit.Services.Categories.Commands
                     throw new Exception("Failed to delete category");
                 }
                 // Remove any cards belonging to the removed category
-                context.Remove(cardList);
+                context.RemoveRange(cardList);
             }
         }
     }

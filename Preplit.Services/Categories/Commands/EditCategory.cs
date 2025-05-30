@@ -20,7 +20,7 @@ namespace Preplit.Services.Categories.Commands
                 var category = await context.Categories.FindAsync([request.CategoryInfo.CategoryId, ct], cancellationToken: ct) ?? throw new NullReferenceException("Category not found");
                 if (category.UserId != request.UserId)
                 {
-                    throw new Exception("Unauthroized");
+                    throw new UnauthorizedAccessException("Unauthorized");
                 }
 
                 mapper.Map(request.CategoryInfo, category);

@@ -19,7 +19,7 @@ namespace Preplit.Services.Cards.Commands
                 var card = await context.Cards.FindAsync([request.CardInfo.CardId, ct], cancellationToken: ct) ?? throw new NullReferenceException("Card not found");
                 if (card.UserId != request.UserId)
                 {
-                    throw new Exception("Unauthorized");
+                    throw new UnauthorizedAccessException("Unauthorized");
                 }
                 mapper.Map(request.CardInfo, card);
                 int res = await context.SaveChangesAsync(ct);

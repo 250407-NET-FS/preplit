@@ -16,7 +16,7 @@ namespace Preplit.Services.Users.Commands
         {
             public async Task Handle(Command request, CancellationToken ct)
             {
-                User? userToDelete = await userManager.FindByIdAsync(request.UserId.ToString()!) ?? throw new Exception("User not found");
+                User? userToDelete = await userManager.FindByIdAsync(request.UserId.ToString()!) ?? throw new NullReferenceException("User not found");
                 
                 IdentityResult result = await userManager.DeleteAsync(userToDelete);
                 if (!result.Succeeded)
