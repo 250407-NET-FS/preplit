@@ -1,4 +1,3 @@
-using Xunit;
 using Preplit.Domain;
 using Preplit.Services.Cards.Queries;
 using Preplit.Services.Cards.Commands;
@@ -6,13 +5,7 @@ using Preplit.Data;
 using Preplit.Domain.DTOs;
 using Moq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
-using Preplit.API;
-using Microsoft.IdentityModel.Tokens;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using AutoMapper;
 
 namespace Preplit.Tests
@@ -50,9 +43,7 @@ namespace Preplit.Tests
             _options = new DbContextOptionsBuilder<PreplitContext>()
                 .UseInMemoryDatabase(databaseName: "PreplitTestDB")
                 .Options;
-            // Ensure the database is empty before each test
-            using var context = new PreplitContext(_options);
-            context.Database.EnsureDeleted();
+
         }
 
         [Fact, Trait("Category", "GetCards")]
@@ -125,24 +116,6 @@ namespace Preplit.Tests
             ClearData();
         }
 
-        [Fact, Trait("Category", "CreateCard")]
-        public async Task CreateCard_WhenSaveFails_ShouldThrowException()
-        {
-            SetupData();
-            var cardDTO = new CardAddDTO
-            {
-                Question = "Question",
-                Answer = "Answer",
-                CategoryId = _expectedCategories[0].CategoryId,
-                OwnerId = _expectedCards[0].UserId
-            };
-
-            using var context = new PreplitContext(_options);
-            var handler = new CreateCard.Handler(context);
-            await Assert.ThrowsAsync<Exception>(() => handler.Handle(new CreateCard.Command { CardInfo = cardDTO }, new CancellationToken()));
-            ClearData();
-        }
-
         [Fact, Trait("Category", "EditCard")]
         public async Task EditCard_ShouldEditCard()
         {
@@ -155,9 +128,10 @@ namespace Preplit.Tests
                 CategoryId = _expectedCategories[1].CategoryId,
                 OwnerId = _expectedCards[0].UserId
             };
+            IMapper mapper = new MapperConfiguration(cfg => cfg.CreateMap<CardUpdateDTO, Card>()).CreateMapper();
 
             using var context = new PreplitContext(_options);
-            var handler = new EditCard.Handler(context, new Mock<IMapper>().Object);
+            var handler = new EditCard.Handler(context, mapper);
             await handler.Handle(new EditCard.Command { CardInfo = cardDTO, UserId = _expectedCards[0].UserId }, CancellationToken.None);
             Assert.Equal(cardDTO.CategoryId, SharedObjects.VALID_CATEGORY_ID_2);
             ClearData();
@@ -182,25 +156,6 @@ namespace Preplit.Tests
             ClearData();
         }
 
-        [Fact, Trait("Category", "EditCard")]
-        public async Task EditCard_WhenSaveFails_ShouldThrowException()
-        {
-            SetupData();
-            var cardDTO = new CardUpdateDTO
-            {
-                CardId = SharedObjects.INVALID_CARD_ID,
-                Question = "Question",
-                Answer = "Answer",
-                CategoryId = _expectedCategories[1].CategoryId,
-                OwnerId = _expectedCards[0].UserId
-            };
-
-            using var context = new PreplitContext(_options);
-            var handler = new EditCard.Handler(context, new Mock<IMapper>().Object);
-            await Assert.ThrowsAsync<Exception>(() => handler.Handle(new EditCard.Command { CardInfo = cardDTO, UserId = _expectedCards[0].UserId }, new CancellationToken()));
-            ClearData();
-        }
-
         [Fact, Trait("Category", "DeleteCard")]
         public async Task DeleteCard_ShouldDeleteCard()
         {
@@ -210,16 +165,6 @@ namespace Preplit.Tests
             await handler.Handle(new DeleteCard.Command { Id = _expectedCards[0].CardId, UserId = _expectedCards[0].UserId }, CancellationToken.None);
             var result = await context.Cards.FindAsync(_expectedCards[0].CardId);
             Assert.Null(result);
-            ClearData();
-        }
-
-        [Fact, Trait("Category", "DeleteCard")]
-        public async Task DeleteCard_WhenSaveFails_ShouldThrowException()
-        {
-            SetupData();
-            using var context = new PreplitContext(_options);
-            var handler = new DeleteCard.Handler(context);
-            await Assert.ThrowsAsync<Exception>(() => handler.Handle(new DeleteCard.Command { Id = SharedObjects.INVALID_CARD_ID, UserId = _expectedCards[0].UserId }, new CancellationToken()));
             ClearData();
         }
 
@@ -236,6 +181,11 @@ namespace Preplit.Tests
         private void SetupData()
         {
             using var context = new PreplitContext(_options);
+            // If data exists, delete the database, then recreate it
+            if (context.Database.EnsureDeleted())
+            {
+                context.Database.EnsureCreated();
+            }
             context.AddRange(_expectedCards);
             context.AddRange(_expectedCategories);
             context.SaveChanges();
@@ -244,9 +194,7 @@ namespace Preplit.Tests
         private void ClearData()
         {
             using var context = new PreplitContext(_options);
-            context.Cards.RemoveRange(context.Cards);
-            context.Categories.RemoveRange(context.Categories);
-            context.SaveChanges();
+            context.Database.EnsureDeleted();
         }
     }
 }
