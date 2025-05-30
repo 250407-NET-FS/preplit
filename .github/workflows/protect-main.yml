@@ -20,10 +20,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Get dependencies
-        run: dotnet restore Jaza-React.sln
+        run: dotnet restore preplit.sln
 
       - name: Build project
-        run: dotnet build Jaza-React.sln --configuration Debug --no-restore
+        run: dotnet build preplit.sln --configuration Debug --no-restore
 
       - name: Make sure all tests work
-        run: dotnet test Jaza-React.sln --no-build --configuration Debug
+        run: dotnet test preplit.sln --no-build --configuration Debug
