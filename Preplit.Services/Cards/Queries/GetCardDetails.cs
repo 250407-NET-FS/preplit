@@ -17,7 +17,7 @@ namespace Preplit.Services.Cards.Queries
         {
             public async Task<CardResponseDTO> Handle(Query request, CancellationToken ct)
             {
-                Card card = await context.Cards.FindAsync([request.Id, ct], cancellationToken: ct) ?? throw new NullReferenceException("Card not found!");
+                Card card = await context.Cards.FindAsync(request.Id, ct) ?? throw new NullReferenceException("Card not found!");
                 return new CardResponseDTO(card);
             }
         }
