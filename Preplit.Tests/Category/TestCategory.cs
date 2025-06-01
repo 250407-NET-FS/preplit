@@ -4,37 +4,35 @@ using Preplit.Services.Categories.Commands;
 using Preplit.Data;
 using Preplit.Domain.DTOs;
 using Moq;
+using MockQueryable;
+using MockQueryable.Moq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using System.Threading.Tasks;
+
 
 namespace Preplit.Tests
 {
     public class TestCategory
     {
         private readonly Mock<PreplitContext> _mockContext;
-        private readonly Mock<DbSet<Card>> _mockCardDbSet;
         private readonly Mock<DbSet<Category>> _mockCategoryDbSet;
         public TestCategory()
         {
             // Create a clean instance of the database context
-            _mockContext = new Mock<PreplitContext>();
-            _mockCardDbSet = new Mock<DbSet<Card>>();
-            _mockCategoryDbSet = new Mock<DbSet<Category>>();
-        }
-
-        [Fact, Trait("Category", "GetCategories")]
-        public async Task GetCategoriesAdmin_ShouldReturnAllCategories()
-        {
-            List<Category> expectedCategories = [
+            _mockContext = new Mock<PreplitContext>(new DbContextOptions<PreplitContext>());
+            // Set up the mock db set for the test methods
+            IEnumerable<Category> expectedCategories = [
                 SharedObjects.CloneValidCategory1(),
                 SharedObjects.CloneValidCategory2(),
                 SharedObjects.CloneValidCategory3(),
                 SharedObjects.CloneValidCategory4()
             ];
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(expectedCategories.AsQueryable());
+            _mockCategoryDbSet = expectedCategories.BuildMock().BuildMockDbSet();
+        }
 
+        [Fact, Trait("Category", "GetCategories")]
+        public async Task GetCategoriesAdmin_ShouldReturnAllCategories()
+        {
             _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
             
             var handler = new GetCategoryList.Handler(_mockContext.Object);
@@ -45,18 +43,11 @@ namespace Preplit.Tests
         [Fact, Trait("Category", "GetCategories")]
         public async Task GetCategories_ShouldReturnCategoriesFromUser()
         {
-            List<Category> expectedCategories = [
-                SharedObjects.CloneValidCategory1(),
-                SharedObjects.CloneValidCategory2(),
-                SharedObjects.CloneValidCategory3(),
-                SharedObjects.CloneValidCategory4()
-            ];
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(expectedCategories.AsQueryable());
-
-            _mockContext.Setup(c => c.Categories.Where(c => c.UserId == SharedObjects.VALID_USER_ID_1)).Returns(new List<Category> { SharedObjects.CloneValidCategory1(), SharedObjects.CloneValidCategory2() }.AsQueryable());
+            Guid userId = SharedObjects.VALID_USER_ID_1;
+            _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
 
             var handler = new GetUserCategoryList.Handler(_mockContext.Object);
-            var result = await handler.Handle(new GetUserCategoryList.Query { UserId = SharedObjects.VALID_USER_ID_1 }, CancellationToken.None);
+            var result = await handler.Handle(new GetUserCategoryList.Query { UserId = userId }, CancellationToken.None);
             Assert.NotNull(result);
         }
 
@@ -64,12 +55,13 @@ namespace Preplit.Tests
         public async Task GetCategoryById_ShouldReturnCategory()
         {
             Category category = SharedObjects.CloneValidCategory1();
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(new List<Category> { category }.AsQueryable());
+            Guid categoryId = category.CategoryId;
 
             _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(category);
 
             var handler = new GetCategoryDetails.Handler(_mockContext.Object);
-            Guid categoryId = category.CategoryId;
+
             var result = await handler.Handle(new GetCategoryDetails.Query { Id = categoryId }, CancellationToken.None);
             Assert.NotNull(result);
             Assert.Equal(categoryId, result.CategoryId);
@@ -79,7 +71,8 @@ namespace Preplit.Tests
         public async Task GetCategoryById_IfCategoryNotFound_ShouldThrowException()
         {
             Guid categoryId = SharedObjects.INVALID_CATEGORY_ID;
-            _mockContext.Setup(c => c.Categories.Where(c => c.CategoryId == categoryId)).Returns(new List<Category>().AsQueryable());
+
+            _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
 
             var handler = new GetCategoryDetails.Handler(_mockContext.Object);
             var ex = await Assert.ThrowsAsync<NullReferenceException>(() => handler.Handle(new GetCategoryDetails.Query { Id = categoryId }, CancellationToken.None));
@@ -94,7 +87,6 @@ namespace Preplit.Tests
                 Name = "Category",
                 UserId = SharedObjects.VALID_USER_ID_1
             };
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(new List<Category>().AsQueryable());
             _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
             _mockContext.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(1));
             
@@ -112,10 +104,10 @@ namespace Preplit.Tests
                 Name = "Category",
                 UserId = SharedObjects.VALID_USER_ID_1
             };
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(new List<Category> { SharedObjects.CloneValidCategory1() }.AsQueryable());
             IMapper mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoryUpdateDTO, Category>()).CreateMapper();
 
             _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(SharedObjects.CloneValidCategory1());
             _mockContext.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(1));
 
             var handler = new EditCategory.Handler(_mockContext.Object, mapper);
@@ -133,9 +125,10 @@ namespace Preplit.Tests
                 Name = "Category",
                 UserId = SharedObjects.VALID_USER_ID_1
             };
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(new List<Category> { SharedObjects.CloneValidCategory1() }.AsQueryable());
             IMapper mapper = new MapperConfiguration(cfg => cfg.CreateMap<CategoryUpdateDTO, Category>()).CreateMapper();
             _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(SharedObjects.CloneValidCategory1());
+
             var handler = new EditCategory.Handler(_mockContext.Object, mapper);
             var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => handler.Handle(new EditCategory.Command { CategoryInfo = categoryDTO, UserId = SharedObjects.INVALID_USER_ID }, CancellationToken.None));
             Assert.Equal("Unauthorized", ex.Message);
@@ -145,23 +138,29 @@ namespace Preplit.Tests
         public async Task DeleteCategory_ShouldDeleteCategory()
         {
             Category category = SharedObjects.CloneValidCategory1();
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(new List<Category> { category }.AsQueryable());
-
+            var cardDbSet = new List<Card> { SharedObjects.CloneValidCard1(), SharedObjects.CloneValidCard2() }.BuildMock().BuildMockDbSet();
+            
+            _mockContext.Setup(c => c.Cards).Returns(cardDbSet.Object);
             _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(category);
             _mockContext.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(1));
 
             var handler = new DeleteCategory.Handler(_mockContext.Object);
             await handler.Handle(new DeleteCategory.Command { Id = SharedObjects.VALID_CATEGORY_ID_1, UserId = SharedObjects.VALID_USER_ID_1 }, CancellationToken.None);
             
-            _mockContext.Verify(c => c.Categories.Remove(It.IsAny<Category>()), Times.Once);
+            _mockContext.Verify(c => c.Remove(It.IsAny<Category>()), Times.Once);
         }
 
         [Fact, Trait("Category", "DeleteCategory")]
         public async Task DeleteCategory_IfUnauthorized_ShouldThrowException()
         {
             Category category = SharedObjects.CloneValidCategory1();
-            _mockCategoryDbSet.As<IQueryable<Category>>().Setup(m => m).Returns(new List<Category> { category }.AsQueryable());
+            var cardDbSet = new List<Card> { SharedObjects.CloneValidCard1(), SharedObjects.CloneValidCard2() }.BuildMock().BuildMockDbSet();
+
+            _mockContext.Setup(c => c.Cards).Returns(cardDbSet.Object);
             _mockContext.Setup(c => c.Categories).Returns(_mockCategoryDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(category);
+            
             var handler = new DeleteCategory.Handler(_mockContext.Object);
             var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => handler.Handle(new DeleteCategory.Command { Id = SharedObjects.VALID_CATEGORY_ID_1, UserId = SharedObjects.INVALID_USER_ID }, CancellationToken.None));
             Assert.Equal("Unauthorized", ex.Message);
