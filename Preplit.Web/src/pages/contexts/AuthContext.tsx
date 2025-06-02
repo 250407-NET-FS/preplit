@@ -17,7 +17,7 @@ const normalizeClaims = (decoded: JwtPayload | JwtHeader | any) => ({
 });
 
 const initialState = {
-    user: {},
+    user: {} as object | null,
     isAuthenticated: false
 }
 

@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, useCallback} from 'react'
 import { api } from "../services/api"; 
 import axios from 'axios';
 
-type Category = {
+export type Category = {
     categoryId: string,
     name: string,
     userId: string

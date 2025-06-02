@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext, useCallback} from 'react'
 import { api } from "../services/api"; 
 import axios from 'axios';
 
-type Card = {
+export type Card = {
     cardId: string,
     question: string,
     answer: string,
