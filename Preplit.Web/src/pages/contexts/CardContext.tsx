@@ -1,14 +1,7 @@
 import React, { createContext, useReducer, useContext, useCallback} from 'react';
 import { api } from "../services/api"; 
+import type { Card } from "../../../types/Card";
 import axios from 'axios';
-
-export type Card = {
-    cardId: string,
-    question: string,
-    answer: string,
-    categoryId: string
-    userId: string
-}
 
 const initialState = {
     cardList: [] as Card[],
