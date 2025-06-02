@@ -1,5 +1,5 @@
 import { render, screen, act } from '@testing-library/react';
-import { AuthProvider, useAuth, reducer } from '../../pages/contexts/AuthContext';
+import { AuthProvider, useAuth, reducer } from '../../src/pages/contexts/AuthContext';
 import { jwtDecode } from 'jwt-decode';
 
 jest.mock('jwt-decode');

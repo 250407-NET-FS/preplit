@@ -1,5 +1,5 @@
-import { reducer, initialState, CardActionTypes } from "../../pages/contexts/CardContext";
-import type { Card } from "../../pages/contexts/CardContext";
+import { reducer, initialState, CardActionTypes } from "../../src/pages/contexts/CardContext";
+import type { Card } from "../../types/Card";
 import sharedData from "../test-data/sharedData";
 
 describe("card reducer", () => {
