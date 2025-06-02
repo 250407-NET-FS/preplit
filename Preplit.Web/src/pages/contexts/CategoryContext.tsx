@@ -2,11 +2,17 @@ import React, { createContext, useReducer, useContext, useCallback} from 'react'
 import { api } from "../services/api"; 
 import axios from 'axios';
 
+type Category = {
+    categoryId: string,
+    name: string,
+    userId: string
+};
+
 const initialState = {
-    categoryList: [],
-    selectedCategory: {},
+    categoryList: [] as Category[],
+    selectedCategory: {} as Category,
     loading: false,
-    error: null
+    error: null as string | null
 };
 // These action types should be exclusive for category requests
 const CategoryActionTypes = {
@@ -19,22 +25,22 @@ const CategoryActionTypes = {
     REQUEST_ERROR: "REQUEST_ERROR"
 };
 
-const reducer = (state: typeof initialState , action: { type: string; payload?: any; }) => {
+const reducer = (state: typeof initialState , action: { type: string; payload?: unknown; }) => {
     switch (action.type) {
         case CategoryActionTypes.REQUEST_START:
             return { ...state, loading: true, error: null };
         case CategoryActionTypes.FETCH_LIST_SUCCESS:
-            return { ...state, loading: false, categoryList: action.payload };
+            return { ...state, loading: false, categoryList: action.payload as Category[] };
         case CategoryActionTypes.FETCH_CATEGORY_SUCCESS:
-            return { ...state, loading: false, selectedCategory: action.payload};
+            return { ...state, loading: false, selectedCategory: action.payload as Category};
         case CategoryActionTypes.CREATE_CATEGORY_SUCCESS:
-            return { ...state, loading: false, categoryList: [...state.categoryList, action.payload]};
+            return { ...state, loading: false, categoryList: [...state.categoryList, action.payload as Category]};
         case CategoryActionTypes.UPDATE_CATEGORY_SUCCESS:
-            return { ...state, loading: false, categoryList: state.categoryList.map((category: any) => category.id === action.payload.id ? action.payload : category)};
+            return { ...state, loading: false, categoryList: state.categoryList.map((category: Category) => category.categoryId === (action.payload as Category).categoryId ? action.payload as Category : category)};
         case CategoryActionTypes.DELETE_CATEGORY_SUCCESS:
-            return { ...state, loading: false,categoryList: state.categoryList.filter((category: any) => category.id !== action.payload)};
+            return { ...state, loading: false,categoryList: state.categoryList.filter((category: Category) => category.categoryId !== (action.payload as Category).categoryId)};
         case CategoryActionTypes.REQUEST_ERROR:
-            return { ...state, loading: false, error: action.payload };
+            return { ...state, loading: false, error: action.payload as string };
         default:
             return state;
     }
