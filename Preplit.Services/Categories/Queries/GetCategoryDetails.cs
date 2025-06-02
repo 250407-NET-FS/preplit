@@ -17,7 +17,7 @@ namespace Preplit.Services.Categories.Queries
         {
             public async Task<CategoryResponseDTO> Handle(Query request, CancellationToken ct)
             {
-                Category category = await context.Categories.FindAsync([request.Id, ct], cancellationToken: ct) ?? throw new NullReferenceException("Category not found!");
+                Category category = await context.Categories.FindAsync(request.Id, ct) ?? throw new NullReferenceException("Category not found");
                 return new CategoryResponseDTO(category);
             }
         }

@@ -18,6 +18,10 @@ namespace Preplit.Services.Cards.Commands
             public async Task<Guid> Handle(Command request, CancellationToken ct)
             {
                 Card newCard = new (request.CardInfo.Question!, request.CardInfo.Answer!, request.CardInfo.CategoryId, request.CardInfo.OwnerId);
+                if (await context.Categories.FindAsync(newCard.CategoryId, ct) is null)
+                {
+                    throw new Exception("Category does not exist");
+                }
                 context.Cards.Add(newCard);
                 int res = await context.SaveChangesAsync(ct);
                 if (res < 1)

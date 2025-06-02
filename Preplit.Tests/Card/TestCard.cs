@@ -4,190 +4,254 @@ using Preplit.Services.Cards.Commands;
 using Preplit.Data;
 using Preplit.Domain.DTOs;
 using Moq;
+using MockQueryable.Moq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using MockQueryable;
 
 namespace Preplit.Tests
 {
     public class TestCard
     {
-        private readonly List<Card> _expectedCards;
-        private readonly List<Category> _expectedCategories;
-        private readonly DbContextOptions<PreplitContext> _options;
+        private readonly Mock<PreplitContext> _mockContext;
+        private readonly Mock<DbSet<Card>> _mockCardDbSet;
 
         public TestCard()
         {
-            // Set up the test data for all test methods
-            _expectedCards =
-            [
+            // Create a clean instance of the database context
+            _mockContext = new Mock<PreplitContext>(new DbContextOptions<PreplitContext>());
+            // Set up the mock db set for the test methods
+            IEnumerable<Card> expectedCards = [
                 SharedObjects.CloneValidCard1(),
                 SharedObjects.CloneValidCard2(),
-                SharedObjects.CloneValidCard3()
+                SharedObjects.CloneValidCard3(),
+                SharedObjects.CloneValidCard4()
             ];
-            _expectedCategories =
-            [
-                SharedObjects.CloneValidCategory1(),
-                SharedObjects.CloneValidCategory2(),
-                SharedObjects.CloneValidCategory3()
-            ];
-
-            // Create a clean instance of the database context
-            _options = new DbContextOptionsBuilder<PreplitContext>()
-                .UseInMemoryDatabase(databaseName: "PreplitTestDB")
-                .Options;
-
+            _mockCardDbSet = expectedCards.BuildMock().BuildMockDbSet();
         }
 
         [Fact, Trait("Category", "GetCards")]
         public async Task GetCardsAdmin_ShouldReturnAllCards()
         {
-            SetupData();
-            using var context = new PreplitContext(_options);
-            var handler = new GetCardList.Handler(context);
-            var result = await handler.Handle(new GetCardList.Query(), CancellationToken.None);
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+
+            var handler = new GetCardList.Handler(_mockContext.Object);
+            var result = await handler.Handle(new Mock<GetCardList.Query>().Object, CancellationToken.None);
             Assert.NotNull(result);
-            ClearData();
+
         }
 
         [Fact, Trait("Category", "GetCards")]
         public async Task GetCards_ShouldReturnCardsFromCategory()
         {
-            SetupData();
-            Guid categoryId = _expectedCategories[0].CategoryId;
+            Category category = SharedObjects.CloneValidCategory1();
+            Guid categoryId = category.CategoryId;
 
-            using var context = new PreplitContext(_options);
-            var handler = new GetCategoryCardList.Handler(context);
+            var categoryDbSet = new List<Category> { category }.BuildMock().BuildMockDbSet();
+
+            _mockContext.Setup(c => c.Categories).Returns(categoryDbSet.Object);
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+
+            var handler = new GetCategoryCardList.Handler(_mockContext.Object);
             var result = await handler.Handle(new GetCategoryCardList.Query { CategoryId = categoryId }, CancellationToken.None);
             Assert.NotNull(result);
             Assert.Equal(categoryId, result.First().CategoryId);
-            ClearData();
         }
 
         [Fact, Trait("Category", "GetCards")]
         public async Task GetCardById_ShouldReturnCard()
         {
-            SetupData();
-            Guid cardId = _expectedCards[0].CardId;
+            Card card = SharedObjects.CloneValidCard1();
+            Guid cardId = card.CardId;
 
-            using var context = new PreplitContext(_options);
-            var handler = new GetCardDetails.Handler(context);
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Cards.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(card).Verifiable();
+
+            var handler = new GetCardDetails.Handler(_mockContext.Object);
+
             var result = await handler.Handle(new GetCardDetails.Query { Id = cardId }, CancellationToken.None);
             Assert.NotNull(result);
             Assert.Equal(cardId, result.CardId);
-            ClearData();
         }
 
         [Fact, Trait("Category", "GetCards")]
         public async Task GetCardById_IfCardNotFound_ShouldThrowException()
         {
-            SetupData();
             Guid cardId = SharedObjects.INVALID_CARD_ID;
 
-            using var context = new PreplitContext(_options);
-            var handler = new GetCardDetails.Handler(context);
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            var handler = new GetCardDetails.Handler(_mockContext.Object);
             await Assert.ThrowsAsync<NullReferenceException>(() => handler.Handle(new GetCardDetails.Query { Id = cardId }, CancellationToken.None));
-            ClearData();
         }
 
         [Fact, Trait("Category", "CreateCard")]
         public async Task CreateCard_ShouldCreateCard()
         {
-            SetupData();
             var cardDTO = new CardAddDTO
             {
                 Question = "Question",
                 Answer = "Answer",
-                CategoryId = _expectedCategories[0].CategoryId,
-                OwnerId = _expectedCards[0].UserId
+                CategoryId = SharedObjects.VALID_CATEGORY_ID_1,
+                OwnerId = SharedObjects.VALID_USER_ID_1
             };
 
-            using var context = new PreplitContext(_options);
-            var handler = new CreateCard.Handler(context);
+            var categoryDbSet = new List<Category> { SharedObjects.CloneValidCategory1() }.BuildMock().BuildMockDbSet();
+
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Categories).Returns(categoryDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(SharedObjects.CloneValidCategory1());
+            _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
+
+            var handler = new CreateCard.Handler(_mockContext.Object);
             var result = await handler.Handle(new CreateCard.Command { CardInfo = cardDTO }, CancellationToken.None);
             Assert.NotEqual(Guid.Empty, result);
-            ClearData();
+            _mockContext.Verify(c => c.Cards.Add(It.IsAny<Card>()), Times.Once);
+        }
+
+        [Fact, Trait("Category", "CreateCard")]
+        public async Task CreateCard_IfNoCategoryFound_ShouldThrowException()
+        {
+            var cardDTO = new CardAddDTO
+            {
+                Question = "Question",
+                Answer = "Answer",
+                CategoryId = SharedObjects.INVALID_CATEGORY_ID,
+                OwnerId = SharedObjects.VALID_USER_ID_1
+            };
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((Category)null!);
+
+            var handler = new CreateCard.Handler(_mockContext.Object);
+            var ex = await Assert.ThrowsAsync<Exception>(() => handler.Handle(new CreateCard.Command { CardInfo = cardDTO }, CancellationToken.None));
+            Assert.Equal("Category does not exist", ex.Message);
+        }
+
+        [Fact, Trait("Category", "CreateCard")]
+        public async Task CreateCard_IfInsertFailed_ShouldThrowException()
+        {
+            var cardDTO = new CardAddDTO
+            {
+                Question = "Question",
+                Answer = "Answer",
+                CategoryId = SharedObjects.VALID_CATEGORY_ID_1,
+                OwnerId = SharedObjects.VALID_USER_ID_1
+            };
+
+            var categoryDbSet = new List<Category> { SharedObjects.CloneValidCategory1() }.BuildMock().BuildMockDbSet();
+
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Categories).Returns(categoryDbSet.Object);
+            _mockContext.Setup(c => c.Categories.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(SharedObjects.CloneValidCategory1());
+            _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
+
+            var handler = new CreateCard.Handler(_mockContext.Object);
+            var ex = await Assert.ThrowsAsync<Exception>(() => handler.Handle(new CreateCard.Command { CardInfo = cardDTO }, CancellationToken.None));
+            Assert.Equal("Failed to insert card", ex.Message);
+            _mockContext.Verify(c => c.Cards.Add(It.IsAny<Card>()), Times.Once);
         }
 
         [Fact, Trait("Category", "EditCard")]
         public async Task EditCard_ShouldEditCard()
         {
-            SetupData();
             var cardDTO = new CardUpdateDTO
             {
-                CardId = _expectedCards[0].CardId,
+                CardId = SharedObjects.VALID_CARD_ID_1,
                 Question = "Question",
                 Answer = "Answer",
-                CategoryId = _expectedCategories[1].CategoryId,
-                OwnerId = _expectedCards[0].UserId
+                CategoryId = SharedObjects.VALID_CATEGORY_ID_2,
+                OwnerId = SharedObjects.VALID_USER_ID_1
             };
             IMapper mapper = new MapperConfiguration(cfg => cfg.CreateMap<CardUpdateDTO, Card>()).CreateMapper();
 
-            using var context = new PreplitContext(_options);
-            var handler = new EditCard.Handler(context, mapper);
-            await handler.Handle(new EditCard.Command { CardInfo = cardDTO, UserId = _expectedCards[0].UserId }, CancellationToken.None);
-            Assert.Equal(cardDTO.CategoryId, SharedObjects.VALID_CATEGORY_ID_2);
-            ClearData();
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Cards.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(SharedObjects.CloneValidCard1());
+            _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
+
+            var handler = new EditCard.Handler(_mockContext.Object, mapper);
+            await handler.Handle(new EditCard.Command { CardInfo = cardDTO, UserId = SharedObjects.VALID_USER_ID_1 }, CancellationToken.None);
+
+            _mockContext.Verify(c => c.SaveChangesAsync(CancellationToken.None), Times.Once);
         }
 
         [Fact, Trait("Category", "EditCard")]
         public async Task EditCard_IfUnauthorized_ShouldThrowException()
         {
-            SetupData();
             var cardDTO = new CardUpdateDTO
             {
-                CardId = _expectedCards[0].CardId,
+                CardId = SharedObjects.VALID_CARD_ID_1,
                 Question = "Question",
                 Answer = "Answer",
-                CategoryId = _expectedCategories[1].CategoryId,
-                OwnerId = _expectedCards[0].UserId
+                CategoryId = SharedObjects.VALID_CATEGORY_ID_2,
+                OwnerId = SharedObjects.VALID_USER_ID_1
             };
 
-            using var context = new PreplitContext(_options);
-            var handler = new EditCard.Handler(context, new Mock<IMapper>().Object);
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => handler.Handle(new EditCard.Command { CardInfo = cardDTO, UserId = SharedObjects.INVALID_USER_ID }, CancellationToken.None));
-            ClearData();
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Cards.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(SharedObjects.CloneValidCard1());
+
+            var handler = new EditCard.Handler(_mockContext.Object, new Mock<IMapper>().Object);
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => handler.Handle(new EditCard.Command { CardInfo = cardDTO, UserId = SharedObjects.INVALID_USER_ID }, CancellationToken.None));
+            Assert.Equal("Unauthorized", ex.Message);
+        }
+
+        [Fact, Trait("Category", "EditCard")]
+        public async Task EditCard_IfEditFailed_ShouldThrowException()
+        {
+            var cardDTO = new CardUpdateDTO
+            {
+                CardId = SharedObjects.VALID_CARD_ID_1,
+                Question = "Question",
+                Answer = "Answer",
+                CategoryId = SharedObjects.VALID_CATEGORY_ID_2,
+                OwnerId = SharedObjects.VALID_USER_ID_1
+            };
+            IMapper mapper = new MapperConfiguration(cfg => cfg.CreateMap<CardUpdateDTO, Card>()).CreateMapper();
+
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Cards.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(SharedObjects.CloneValidCard1());
+            _mockContext.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
+
+            var handler = new EditCard.Handler(_mockContext.Object, mapper);
+            var ex = await Assert.ThrowsAsync<Exception>(() => handler.Handle(new EditCard.Command { CardInfo = cardDTO, UserId = SharedObjects.VALID_USER_ID_1 }, CancellationToken.None));
+            Assert.Equal("Failed to update card", ex.Message);
         }
 
         [Fact, Trait("Category", "DeleteCard")]
         public async Task DeleteCard_ShouldDeleteCard()
         {
-            SetupData();
-            using var context = new PreplitContext(_options);
-            var handler = new DeleteCard.Handler(context);
-            await handler.Handle(new DeleteCard.Command { Id = _expectedCards[0].CardId, UserId = _expectedCards[0].UserId }, CancellationToken.None);
-            var result = await context.Cards.FindAsync(_expectedCards[0].CardId);
-            Assert.Null(result);
-            ClearData();
+            Card card = SharedObjects.CloneValidCard1();
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Cards.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(card);
+            _mockContext.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(1));
+
+            var handler = new DeleteCard.Handler(_mockContext.Object);
+            await handler.Handle(new DeleteCard.Command { Id = SharedObjects.VALID_CARD_ID_1, UserId = SharedObjects.VALID_USER_ID_1 }, CancellationToken.None);
+
+            _mockContext.Verify(c => c.Remove(It.IsAny<Card>()), Times.Once);
         }
 
         [Fact, Trait("Category", "DeleteCard")]
         public async Task DeleteCard_IfUnauthorized_ShouldThrowException()
         {
-            SetupData();
-            using var context = new PreplitContext(_options);
-            var handler = new DeleteCard.Handler(context);
-            await Assert.ThrowsAsync<UnauthorizedAccessException>(() => handler.Handle(new DeleteCard.Command { Id = _expectedCards[0].CardId, UserId = SharedObjects.INVALID_USER_ID }, CancellationToken.None));
-            ClearData();
+            Card card = SharedObjects.CloneValidCard1();
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Cards.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(card);
+
+            var handler = new DeleteCard.Handler(_mockContext.Object);
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => handler.Handle(new DeleteCard.Command { Id = SharedObjects.VALID_CARD_ID_1, UserId = SharedObjects.INVALID_USER_ID }, CancellationToken.None));
+            Assert.Equal("Unauthorized", ex.Message);
         }
 
-        private void SetupData()
+        [Fact, Trait("Category", "DeleteCard")]
+        public async Task DeleteCard_IfDeleteFailed_ShouldThrowException()
         {
-            using var context = new PreplitContext(_options);
-            // If data exists, delete the database, then recreate it
-            if (context.Database.EnsureDeleted())
-            {
-                context.Database.EnsureCreated();
-            }
-            context.AddRange(_expectedCards);
-            context.AddRange(_expectedCategories);
-            context.SaveChanges();
-        }
+            Card card = SharedObjects.CloneValidCard1();
+            _mockContext.Setup(c => c.Cards).Returns(_mockCardDbSet.Object);
+            _mockContext.Setup(c => c.Cards.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(card);
+            _mockContext.Setup(c => c.SaveChangesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
 
-        private void ClearData()
-        {
-            using var context = new PreplitContext(_options);
-            context.Database.EnsureDeleted();
+            var handler = new DeleteCard.Handler(_mockContext.Object);
+            var ex = await Assert.ThrowsAsync<Exception>(() => handler.Handle(new DeleteCard.Command { Id = SharedObjects.VALID_CARD_ID_1, UserId = SharedObjects.VALID_USER_ID_1 }, CancellationToken.None));
+            Assert.Equal("Failed to delete card", ex.Message);
         }
     }
 }

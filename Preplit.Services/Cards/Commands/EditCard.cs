@@ -16,7 +16,7 @@ namespace Preplit.Services.Cards.Commands
         public class Handler(PreplitContext context, IMapper mapper) : IRequestHandler<Command> {
             public async Task Handle(Command request, CancellationToken ct)
             {
-                var card = await context.Cards.FindAsync([request.CardInfo.CardId, ct], cancellationToken: ct) ?? throw new NullReferenceException("Card not found");
+                var card = await context.Cards.FindAsync(request.CardInfo.CardId, ct) ?? throw new NullReferenceException("Card not found");
                 if (card.UserId != request.UserId)
                 {
                     throw new UnauthorizedAccessException("Unauthorized");

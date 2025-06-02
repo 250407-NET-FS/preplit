@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using MockQueryable;
+using MockQueryable.Moq;
 using Preplit.Domain;
 using Preplit.Services.Users.Queries;
 using Preplit.Services.Users.Commands;
@@ -32,29 +34,25 @@ namespace Preplit.Tests
             _mockConfig.Setup(c => c["Jwt:ExpireDays"]).Returns("7");
         }
 
-        // [Fact, Trait("Category", "GetUsers")]
-        // public async Task GetAllUsersAsync_ShouldReturnAllUsers()
-        // {
+        [Fact, Trait("Category", "GetUsers")]
+        public async Task GetAllUsersAsync_ShouldReturnAllUsers()
+        {
 
-        //     var users = new List<User>
-        //     {
-        //         new() { Id = SharedObjects.VALID_USER_ID_1, UserName = "user1", Email = "user1@test.com" },
-        //         new() { Id = SharedObjects.VALID_USER_ID_2, UserName = "user2", Email = "user2@test.com" }
-        //     }.AsQueryable();
+            IEnumerable<User> users =
+            [
+                new() { Id = SharedObjects.VALID_USER_ID_1, UserName = "user1", Email = "user1@test.com" },
+                new() { Id = SharedObjects.VALID_USER_ID_2, UserName = "user2", Email = "user2@test.com" }
+            ];
 
-        //     var mockDbSet = new Mock<DbSet<User>>();
-        //     var handler = new GetUserList.Handler(_userManager.Object);
-        //     mockDbSet.As<IQueryable<User>>().Setup(m => m.Provider).Returns(users.Provider);
-        //     mockDbSet.As<IQueryable<User>>().Setup(m => m.Expression).Returns(users.Expression);
-        //     mockDbSet.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(users.ElementType);
-        //     mockDbSet.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(users.GetEnumerator());
+            var mockUserDbSet = users.BuildMock().BuildMockDbSet();
+            var handler = new GetUserList.Handler(_userManager.Object);
 
-        //     _userManager.Setup(x => x.Users).Returns(mockDbSet.Object);
+            _userManager.Setup(x => x.Users).Returns(mockUserDbSet.Object);
 
-        //     var result = await handler.Handle(new GetUserList.Query(), CancellationToken.None);
-        //     Assert.NotNull(result);
-        //     Assert.Equal(2, result.Count());
-        // }
+            var result = await handler.Handle(new GetUserList.Query(), CancellationToken.None);
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count());
+        }
 
         [Fact, Trait("Category", "GetUsers")]
         public async Task GetLoggedInUser_shouldReturnUser()

@@ -17,7 +17,7 @@ namespace Preplit.Services.Categories.Commands
         public class Handler(PreplitContext context, IMapper mapper) : IRequestHandler<Command> {
             public async Task Handle(Command request, CancellationToken ct)
             {
-                var category = await context.Categories.FindAsync([request.CategoryInfo.CategoryId, ct], cancellationToken: ct) ?? throw new NullReferenceException("Category not found");
+                var category = await context.Categories.FindAsync(request.CategoryInfo.CategoryId, ct) ?? throw new NullReferenceException("Category not found");
                 if (category.UserId != request.UserId)
                 {
                     throw new UnauthorizedAccessException("Unauthorized");

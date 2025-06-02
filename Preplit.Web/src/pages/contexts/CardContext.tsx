@@ -2,11 +2,19 @@ import React, { createContext, useReducer, useContext, useCallback} from 'react'
 import { api } from "../services/api"; 
 import axios from 'axios';
 
+export type Card = {
+    cardId: string,
+    question: string,
+    answer: string,
+    categoryId: string
+    userId: string
+}
+
 const initialState = {
-    cardList: [],
-    selectedCard: {},
+    cardList: [] as Card[],
+    selectedCard: {} as Card,
     loading: false,
-    error: null
+    error: null as string | null
 };
 // These action types should be exclusive for card requests
 const CardActionTypes = {
@@ -19,22 +27,22 @@ const CardActionTypes = {
     REQUEST_ERROR: "REQUEST_ERROR"
 };
 
-const reducer = (state: typeof initialState, action: { type: string; payload?: any; }) => {
+const reducer = (state: typeof initialState, action: { type: string; payload?: unknown; }) => {
     switch (action.type) {
         case CardActionTypes.REQUEST_START:
             return { ...state, loading: true, error: null };
         case CardActionTypes.FETCH_LIST_SUCCESS:
-            return { ...state, loading: false, cardList: action.payload };
+            return { ...state, loading: false, cardList: action.payload as Card[] };
         case CardActionTypes.FETCH_CARD_SUCCESS:
-            return { ...state, loading: false,selectedCards: action.payload};
+            return { ...state, loading: false, selectedCard: action.payload as Card };
         case CardActionTypes.CREATE_CARD_SUCCESS:
-            return { ...state, loading: false, cardList: [...state.cardList, action.payload]};
+            return { ...state, loading: false, cardList: [...state.cardList, action.payload as Card]};
         case CardActionTypes.UPDATE_CARD_SUCCESS:
-            return { ...state, loading: false, cardList: state.cardList.map((card: any) => card.id === action.payload.id ? action.payload : card)};
+            return { ...state, loading: false, cardList: state.cardList.map((card: Card) => card.cardId === (action.payload as Card).cardId ? action.payload as Card : card)};
         case CardActionTypes.DELETE_CARD_SUCCESS:
-            return { ...state, loading: false,cardList: state.cardList.filter((card: any) => card.id !== action.payload)};
+            return { ...state, loading: false,cardList: state.cardList.filter((card: Card) => card.cardId !== (action.payload as Card).cardId)};
         case CardActionTypes.REQUEST_ERROR:
-            return { ...state, loading: false, error: action.payload };
+            return { ...state, loading: false, error: action.payload as string };
         default:
             return state;
     }
