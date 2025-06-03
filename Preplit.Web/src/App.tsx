@@ -11,6 +11,8 @@ import UserList from './pages/admin/UserList'
 import CategoryList from './pages/admin/CategoryList'
 import CardList from './pages/admin/CardList'
 import Home from './pages/Home'
+import UserCategoryList from './pages/categories/UserCategoryList'
+import Register from './Register'
 
 function App() {
   return (
@@ -26,6 +28,10 @@ function App() {
                 <Route path="CategoryList" element={<CategoryList />} />
                 <Route path="CardList" element={<CardList />} />
               </Route>
+              <Route path="/categories" element={<UserCategoryList />} />
+              <Route path="/register" element={<Register />} />
+              {/* <Route path="*" element={<NotFound />} /> */}
+              <Route path='*' element={<Home />} />
             </Routes>
           </Router>
         </CardProvider>
