@@ -1,7 +1,7 @@
 import {Container, Grid, IconButton} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import {useCard} from "../contexts/CardContext";
-import {useAuth} from "../contexts/AuthContext";
 import {useEffect, useState, type JSX} from "react";
 import Popup from "reactjs-popup";
 import CreateCard from "./CreateCard";
@@ -10,13 +10,9 @@ import type { FlashCard} from "../../../types/FlashCard";
 import type { Category } from "../../../types/Category";
 
 function UserCardList({category}: {category: Category}) {
-    const { user } = useAuth();
-    const { cardList, selectedCard, fetchCardList, fetchCard, createCard, updateCard, deleteCard } = useCard();
+    const { cardList, fetchCardList } = useCard();
 
-    const [selectedProp, setSelectedProp] = useState(null);
     const [createPopupOpen, setCreatePopupOpen] = useState(false);
-    const [updatepopupOpen, setUpdatePopupOpen] = useState(false);
-    const [deletePopupOpen, setDeletePopupOpen] = useState(false);
 
     useEffect(() => {
         fetchCardList(category.categoryId);
@@ -30,22 +26,6 @@ function UserCardList({category}: {category: Category}) {
 
     const handleCreate = () => {
         setCreatePopupOpen(true);
-    };
-
-    const handleUpdate = (cardId: string) => {
-        const card = cardList.find((card: FlashCard) => card.cardId === cardId);
-        if (card) {
-            setSelectedProp(card);
-            setUpdatePopupOpen(true);
-        }
-    };
-
-    const handleDelete = (cardId: string) => {
-        const card = cardList.find((card: FlashCard) => card.cardId === cardId);
-        if (card) {
-            setSelectedProp(card);
-            setDeletePopupOpen(true);
-        }
     };
 
     return (
@@ -85,7 +65,7 @@ function UserCardList({category}: {category: Category}) {
                 }}
             >
                 <div>
-                    <button
+                    <IconButton
                         onClick={() => setCreatePopupOpen(false)}
                         style={{
                             position: 'absolute',
@@ -98,9 +78,9 @@ function UserCardList({category}: {category: Category}) {
                             color: 'black',
                         }}
                     >
-                        ×
-                    </button>
-                    <CreateCard />
+                        <CloseOutlinedIcon />
+                    </IconButton>
+                    <CreateCard categoryId={category.categoryId}/>
                 </div>
             </Popup>
         </Container>

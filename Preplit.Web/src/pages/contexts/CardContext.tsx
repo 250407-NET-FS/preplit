@@ -1,11 +1,11 @@
 import React, { createContext, useReducer, useContext, useCallback} from 'react';
 import { api } from "../services/api"; 
-import type { Card } from "../../../types/FlashCard";
+import type { FlashCard } from "../../../types/FlashCard";
 import axios from 'axios';
 
 const initialState = {
-    cardList: [] as Card[],
-    selectedCard: {} as Card,
+    cardList: [] as FlashCard[],
+    selectedCard: {} as FlashCard,
     loading: false,
     error: null as string | null
 };
@@ -25,15 +25,15 @@ const reducer = (state: typeof initialState, action: { type: string; payload?: u
         case CardActionTypes.REQUEST_START:
             return { ...state, loading: true, error: null };
         case CardActionTypes.FETCH_LIST_SUCCESS:
-            return { ...state, loading: false, cardList: action.payload as Card[] };
+            return { ...state, loading: false, cardList: action.payload as FlashCard[] };
         case CardActionTypes.FETCH_CARD_SUCCESS:
-            return { ...state, loading: false, selectedCard: action.payload as Card };
+            return { ...state, loading: false, selectedCard: action.payload as FlashCard };
         case CardActionTypes.CREATE_CARD_SUCCESS:
-            return { ...state, loading: false, cardList: [...state.cardList, action.payload as Card]};
+            return { ...state, loading: false, cardList: [...state.cardList, action.payload as FlashCard]};
         case CardActionTypes.UPDATE_CARD_SUCCESS:
-            return { ...state, loading: false, cardList: state.cardList.map((card: Card) => card.cardId === (action.payload as Card).cardId ? action.payload as Card : card)};
+            return { ...state, loading: false, cardList: state.cardList.map((card: FlashCard) => card.cardId === (action.payload as FlashCard).cardId ? action.payload as FlashCard : card)};
         case CardActionTypes.DELETE_CARD_SUCCESS:
-            return { ...state, loading: false,cardList: state.cardList.filter((card: Card) => card.cardId !== (action.payload as Card).cardId)};
+            return { ...state, loading: false,cardList: state.cardList.filter((card: FlashCard) => card.cardId !== (action.payload as FlashCard).cardId)};
         case CardActionTypes.REQUEST_ERROR:
             return { ...state, loading: false, error: action.payload as string };
         default:
