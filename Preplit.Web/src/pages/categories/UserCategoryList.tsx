@@ -1,4 +1,4 @@
-import { Button, Container, Grid, IconButton } from "@mui/material";
+import { Container, Grid, IconButton } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { useCategory } from "../contexts/CategoryContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -6,23 +6,15 @@ import { useEffect, useState, type JSX } from "react";
 import Popup from "reactjs-popup";
 //import CreateCategory from "./CreateCategory";
 import NavBar from "../shared/NavBar";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { api } from "../services/api";
 import CategoryCard from "./CategoryCard";
+import CreateCategory from "./CreateCategory";
 import type { Category } from "../../../types/Category";
 
 function UserCategoryList() {
     const { user } = useAuth();
-    const { categoryList, selectedCategory, fetchCategoryList, fetchCategory, createCategory, updateCategory, deleteCategory } = useCategory();
+    const { categoryList, fetchCategoryList } = useCategory();
 
-    const [selectedProp, setSelectedProp] = useState(null);
-    const [cardListOpen, setCardListOpen] = useState(false);
     const [createPopupOpen, setCreatePopupOpen] = useState(false);
-    const [update, setUpdate] = useState(false);
-    const [deletePopupOpen, setDeletePopupOpen] = useState(false);
 
     useEffect(() => {
         fetchCategoryList();
@@ -34,32 +26,8 @@ function UserCategoryList() {
         </Grid>
     ));
 
-    const handleClick = (categoryId: string) => {
-        const category = categoryList.find((category: Category) => category.categoryId === categoryId);
-        if (category) {
-            setSelectedProp(category);
-            setCardListOpen(true);
-        }
-    };
-
     const handleCreate = () => {
         setCreatePopupOpen(true);
-    };
-
-    const handleUpdate = (categoryId: string) => {
-        const category = categoryList.find((category: Category) => category.categoryId === categoryId);
-        if (category) {
-            setSelectedProp(category);
-            setUpdate(true);
-        }
-    };
-
-    const handleDelete = (categoryId: string) => {
-        const category = categoryList.find((category: Category) => category.categoryId === categoryId);
-        if (category) {
-            setSelectedProp(category);
-            setDeletePopupOpen(true);
-        }
     };
 
     return (
@@ -80,6 +48,47 @@ function UserCategoryList() {
                     </Grid>
                     {categoryNodeList}
                 </Grid>
+                <Popup
+                    open={createPopupOpen}
+                    closeOnDocumentClick
+                    onClose={() => setCreatePopupOpen(false)}
+                    modal
+                    nested
+                    overlayStyle={{
+                        background: "rgba(0, 0, 0, 0.5)",
+                    }}
+                    contentStyle={{
+                        borderRadius: "10px",
+                        padding: "30px",
+                        maxWidth: "80vw",
+                        width: "80%",
+                        height: '80vh',
+                        margin: "auto",
+                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
+                        fontFamily: "Arial, sans-serif",
+                        position: 'relative',
+                        overflowY: 'auto',
+                    }}
+                >
+                    <div>
+                        <button
+                            onClick={() => setCreatePopupOpen(false)}
+                            style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                background: 'none',
+                                border: 'none',
+                                fontSize: '24px',
+                                cursor: 'pointer',
+                                color: 'black',
+                            }}
+                        >
+                            ×
+                        </button>
+                        <CreateCategory />
+                    </div>
+                </Popup>
             </Container>
         </>
     )
