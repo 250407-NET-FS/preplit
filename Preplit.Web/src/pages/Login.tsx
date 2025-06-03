@@ -1,55 +1,58 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "./contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-function Register() {
-  const { register } = useAuth();
-  const [errorMessage, setErrorMessage] = useState('');
+function Login() {
+  const { login } = useAuth();
+  const [errorMessage, setErrorMessage] = useState('' as string | null);
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    fullName: "",
     email: "",
     password: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Validate input fields
-  if (!credentials.email || !credentials.password || !credentials.fullName) {
-    setErrorMessage('Please fill in all fields');
-    setSuccessMessage('');
-    return;
-  }
-
-  // Log registration attempt
-  console.log('Registering with:', credentials);
-
-  try {
-    const success = await register(credentials);
-    console.log("Registration statues: ", success);
-
-    if (success) {
-      setSuccessMessage('Registration successful!');
-      setErrorMessage('');
-      navigate("/");
-    } else {
-      setErrorMessage('Registration failed. Please try again.');
+    // logging and user messages
+    if (credentials.email === '' || credentials.password === '') {
+      setErrorMessage('Please fill in all fields');
       setSuccessMessage('');
+      credentials.email = "";
+      credentials.password = "";
+    } else {
+      // logging
+      console.log('Logging in with:', {
+            email: credentials.email,
+            password: credentials.password
+        });
+
+        // Attempt to log in the user with the provided credentials
+        try {
+            const success = await login(credentials);
+          if (success) {
+              // user message
+              setSuccessMessage('Login successful!');
+              setErrorMessage(null);
+              navigate("/");
+          } else {
+            setErrorMessage('Login failed. Please try again.');
+            credentials.email = "";
+            credentials.password = "";
+          }
+        } catch (errorMessage) {
+            setErrorMessage("Invalid credentials. Please try again.");
+            return;
+        }
     }
-  } catch (error) {
-    console.error('Registration error');
-    setErrorMessage('Invalid credentials. Please try again.');
-    setSuccessMessage('');
-  }
-};
+
+  };
 
   return (
     <>
-    <div style={{padding: 10, margin: 10}}>
-      <h1>User Register</h1>
+      <h1>User Login</h1>
 
       {/* Alert Messages */}
       {errorMessage && (
@@ -80,18 +83,6 @@ function Register() {
             required
               />
             </div>
-            {/* Full Name */}
-            <div className="form-group">
-              <p>Full Name</p>
-              <input
-                type="name"
-                value={credentials.fullName}
-                onChange={(e) => 
-                setCredentials({ ...credentials, fullName: e.target.value })
-                }
-            required
-              />
-            </div>
 
             {/* Password */}
             <div className="form-group">
@@ -110,7 +101,7 @@ function Register() {
             <div className="form-group">
               <input
                 type="submit"
-                value="Register"
+                value="Login"
                 className="btn btn-outline-dark"
               />
             </div>
@@ -120,13 +111,12 @@ function Register() {
 
       <div>
         <p>
-            Already have an account?{' '}
-            <Link to="/" className="btn btn-outline-dark">Login</Link>
+            Don't have an account?{' '}
+            <Link to="/register" className="btn btn-outline-dark">Register</Link>
         </p>
-      </div>
       </div>
     </>
   );
 }
 
-export default Register;
+export default Login;
