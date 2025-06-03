@@ -126,6 +126,24 @@ namespace Preplit.API
                 return BadRequest(err.Message);
             }
         }
+        /**
+          * Delete: api/admin/cards/{id}
+          * Endpoint to delete a card by its id Admin Only
+        */
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("admin/{cardId}/{userId}")]
+        public async Task<ActionResult<bool>> DeleteCardById([FromRoute] Guid cardId, Guid userId, CancellationToken ct)
+        {
+            try
+            {
+                await Mediator.Send(new DeleteCard.Command { Id = cardId, UserId = userId }, ct);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         private async Task<User?> GetCurrentUserAsync()
         {

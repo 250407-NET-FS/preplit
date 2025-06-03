@@ -1,12 +1,7 @@
 import React, { createContext, useReducer, useContext, useCallback} from 'react';
-import { api } from "../services/api"; 
+import { api } from "../services/api";
+import type { Category } from "../../../types/Category"; 
 import axios from 'axios';
-
-export type Category = {
-    categoryId: string,
-    name: string,
-    userId: string
-};
 
 const initialState = {
     categoryList: [] as Category[],
@@ -164,7 +159,7 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     );
 }
 
-export const usecategory = () => {
+export const useCategory = () => {
     const categoryContext = useContext(CategoryContext);
 
     if (!categoryContext) {

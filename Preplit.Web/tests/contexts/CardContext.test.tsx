@@ -1,5 +1,5 @@
-import { reducer, initialState, CategoryActionTypes } from "../../pages/contexts/CategoryContext";
-import type { Category } from "../../pages/contexts/CategoryContext";
+import { reducer, initialState, CardActionTypes } from "../../src/pages/contexts/CardContext";
+import type { Card } from "../../types/FlashCard";
 import sharedData from "../test-data/sharedData";
 
 describe("card reducer", () => {
@@ -11,89 +11,91 @@ describe("card reducer", () => {
 
     it("handles REQUEST_START", () => {
         const prevState = { ...initialState, loading: false, error: null };
-        const action = { type: CategoryActionTypes.REQUEST_START };
+        const action = { type: CardActionTypes.REQUEST_START };
         const result = reducer(prevState, action);
         expect(result).toEqual({ ...initialState, loading: true, error: null });
     });
 
   it("handles FETCH_LIST_SUCCESS", () => {
     const action = {
-      type: CategoryActionTypes.FETCH_LIST_SUCCESS,
-      payload: sharedData.categoryList,
+      type: CardActionTypes.FETCH_LIST_SUCCESS,
+      payload: sharedData.cardList,
     };
     const result = reducer({ ...initialState, loading: true }, action);
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      propertyList: sharedData.categoryList,
+      cardList: sharedData.cardList,
     });
   });
 
-  it("handles FETCH_CATEGORY_SUCCESS", () => {
-    const property = sharedData.categoryList[0];
+  it("handles FETCH_CARD_SUCCESS", () => {
+    const card = sharedData.cardList[0];
     const action = {
-      type: CategoryActionTypes.FETCH_CATEGORY_SUCCESS,
-      payload: property,
+      type: CardActionTypes.FETCH_CARD_SUCCESS,
+      payload: card,
     };
     const result = reducer({ ...initialState, loading: true }, action);
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      selectedProperty: property,
+      selectedProperty: card,
     });
   });
 
-  it("handles CREATE_CATEGORY_SUCCESS", () => {
-    const newCategory = {
-      categoryId: "ca7ccedd-718f-4eb3-a04c-a887bd5cdbf3",
-      name: "New Category",
-      userId: sharedData
+  it("handles CREATE_CARD_SUCCESS", () => {
+    const newCard = { 
+      cardId: "baef5434-a9ee-46c3-877a-7bdbedce7403", 
+      question: "New Question", 
+      answer: "New Answer", 
+      categoryId: sharedData.categoryList[0].categoryId, 
+      userId: sharedData.userList[0].userId
     };
-    const prevState = { ...initialState, loading: true, categoryList: sharedData.categoryList };
+    const prevState = { ...initialState, loading: true, cardList: sharedData.cardList };
     const action = {
-      type: CategoryActionTypes.CREATE_CATEGORY_SUCCESS,
-      payload: newCategory,
+      type: CardActionTypes.CREATE_CARD_SUCCESS,
+      payload: newCard,
     };
     const result = reducer(prevState, action);
     expect(result).toEqual({
       ...prevState,
       loading: false,
-      categoryList: [...prevState.categoryList, action.payload],
+      cardList: [...prevState.cardList, action.payload]
     });
   });
 
-  it("handles UPDATE_CATEGORY_SUCCESS", () => {
-    const updated = { ...sharedData.categoryList[0], name: "Updated Category" };
+  it("handles UPDATE_CARD_SUCCESS", () => {
+    const updated = { ...sharedData.cardList[0], categoryId: sharedData.categoryList[1].categoryId };
     const action = {
-      type: CategoryActionTypes.UPDATE_CATEGORY_SUCCESS,
+      type: CardActionTypes.UPDATE_CARD_SUCCESS,
       payload: updated,
     };
     const result = reducer({ ...initialState, loading: true }, action);
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      categoryList: initialState.categoryList.map((category: Category) => category.categoryId === action.payload.categoryId ? action.payload : category),
+      cardList: initialState.cardList.map((card: Card) => card.cardId === action.payload.cardId ? action.payload : card),
     });
   });
 
-  it("handles DELETE_CATEGORY_SUCCESS", () => {
-    const deleted = sharedData.categoryList[0];
+  it("handles DELETE_CARD_SUCCESS", () => {
+    const deleted = sharedData.cardList[0];
     const action = {
-      type: CategoryActionTypes.DELETE_CATEGORY_SUCCESS,
+      type: CardActionTypes.DELETE_CARD_SUCCESS,
       payload: deleted,
     };
     const result = reducer({ ...initialState, loading: true }, action);
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      categoryList: initialState.categoryList.filter((category: Category) => category.categoryId !== action.payload.categoryId),
+      cardList: initialState.cardList.filter((card: Card) => card.cardId !== action.payload.cardId),
     });
   });
 
   it("handles REQUEST_ERROR", () => {
     const errorMsg = "Failed to fetch";
     const action = {
-      type: CategoryActionTypes.REQUEST_ERROR,
+      type: CardActionTypes.REQUEST_ERROR,
       payload: errorMsg,
     };
     const result = reducer({ ...initialState, loading: true }, action);
