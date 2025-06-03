@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useCallback} from 'react';
 import { api } from "../services/api"; 
-import type { Card } from "../../../types/Card";
+import type { Card } from "../../../types/FlashCard";
 import axios from 'axios';
 
 const initialState = {

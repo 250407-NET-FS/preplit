@@ -1,4 +1,4 @@
-export type Card = {
+export type FlashCard = {
     cardId: string,
     question: string,
     answer: string,

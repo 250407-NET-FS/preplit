@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../services/api";
-import type {Card } from "../../../types/Card";
+import type {Card } from "../../../types/FlashCard";
 
 function CardList() {
   const [cards, setCards] = useState([] as Card[]);
