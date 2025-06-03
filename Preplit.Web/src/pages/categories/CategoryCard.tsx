@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@mui/material'
-// import CardList from './cards/CategoryCardList';
+import UserCardList from '../cards/UserCardList';
 import Popup from "reactjs-popup";
 import type { Category } from '../../../types/Category';
 
@@ -80,7 +80,7 @@ const CategoryCard = ({ category }: { category: Category }) => {
                         >
                             ×
                         </button>
-                        {/*<CategoryCardList category={category} /> */}
+                        <UserCardList category={category} />
                     </div>
                 )}
             </Popup>

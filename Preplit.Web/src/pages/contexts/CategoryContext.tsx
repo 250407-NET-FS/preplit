@@ -159,7 +159,7 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     );
 }
 
-export const usecategory = () => {
+export const useCategory = () => {
     const categoryContext = useContext(CategoryContext);
 
     if (!categoryContext) {
