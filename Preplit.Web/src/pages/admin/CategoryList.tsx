@@ -4,7 +4,6 @@ import type {Category } from "../../../types/Category";
 
 function CategoryList() {
   const [categories, setCategories] = useState([] as Category[]);
-  const token = localStorage.getItem("jwt");
 
   useEffect(() => {
     api

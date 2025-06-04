@@ -4,7 +4,6 @@ import type {FlashCard } from "../../../types/FlashCard";
 
 function CardList() {
   const [cards, setCards] = useState([] as FlashCard[]);
-  const token = localStorage.getItem("jwt");
 
   useEffect(() => {
     api

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import NavBar from "./shared/NavBar";
 import { useAuth } from "./contexts/AuthContext";
 import { useCategory } from "./contexts/CategoryContext";
@@ -8,8 +8,8 @@ import type { Category } from "../../types/Category";
 import { Container, Grid } from "@mui/material";
 
 export default function Home() {
-    const { user, login, logout } = useAuth();
-    const { categoryList, selectedCategory, fetchCategoryList, fetchCategory } = useCategory();
+    const { user } = useAuth();
+    const { categoryList, fetchCategoryList } = useCategory();
 
     useEffect(() => {
         fetchCategoryList();
