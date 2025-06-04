@@ -2,7 +2,7 @@ import { Container, Grid, IconButton } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { useCategory } from "../contexts/CategoryContext";
 import { useAuth } from "../contexts/AuthContext";
-import { useEffect, useState, type JSX } from "react";
+import React, { useEffect, useState, type JSX } from "react";
 import Popup from "reactjs-popup";
 //import CreateCategory from "./CreateCategory";
 import NavBar from "../shared/NavBar";
