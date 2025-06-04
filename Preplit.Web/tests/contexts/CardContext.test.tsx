@@ -1,5 +1,5 @@
 import { reducer, initialState, CardActionTypes } from "../../src/pages/contexts/CardContext";
-import type { Card } from "../../types/FlashCard";
+import type { FlashCard } from "../../types/FlashCard";
 import sharedData from "../test-data/sharedData";
 
 describe("card reducer", () => {
@@ -74,7 +74,7 @@ describe("card reducer", () => {
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      cardList: initialState.cardList.map((card: Card) => card.cardId === action.payload.cardId ? action.payload : card),
+      cardList: initialState.cardList.map((card: FlashCard) => card.cardId === action.payload.cardId ? action.payload : card),
     });
   });
 
@@ -88,7 +88,7 @@ describe("card reducer", () => {
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      cardList: initialState.cardList.filter((card: Card) => card.cardId !== action.payload.cardId),
+      cardList: initialState.cardList.filter((card: FlashCard) => card.cardId !== action.payload.cardId),
     });
   });
 

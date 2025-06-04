@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { api } from "../services/api";
-import type {Card } from "../../../types/FlashCard";
+import type {FlashCard } from "../../../types/FlashCard";
 
 function CardList() {
-  const [cards, setCards] = useState([] as Card[]);
+  const [cards, setCards] = useState([] as FlashCard[]);
   const token = localStorage.getItem("jwt");
 
   useEffect(() => {
@@ -18,7 +18,7 @@ function CardList() {
       .delete(
         `properties/admin/${cardId}/${ownerId}`)
       .then(() => {
-        setCards((prevCards: Card[]) =>
+        setCards((prevCards: FlashCard[]) =>
           prevCards.filter((c) => c.cardId !== cardId)
         );
       })
