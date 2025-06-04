@@ -127,6 +127,24 @@ namespace Preplit.API
                 return BadRequest(err.Message);
             }
         }
+        /**
+          * Delete: api/admin/categories/{id}/{userId}
+          * Endpoint to delete a category by its id Admin Only
+        */
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("admin/{categoryId}/{userId}")]
+        public async Task<ActionResult<bool>> DeleteCategoryById([FromRoute] Guid categoryId, Guid userId, CancellationToken ct)
+        {
+            try
+            {
+                await Mediator.Send(new DeleteCategory.Command { Id = categoryId, UserId = userId }, ct);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         private async Task<User?> GetCurrentUserAsync()
         {

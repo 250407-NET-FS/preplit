@@ -1,7 +1,7 @@
-import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
 import {toast} from "react-toastify";
 
-const baseURL = import.meta.env.DEV ? "https://localhost:5280/api" : "https://preplitapi.azurewebsites.net/api";
+const baseURL = "https://localhost:5280/api";
 
 export const api = axios.create({
     baseURL,
@@ -13,7 +13,7 @@ export const api = axios.create({
 // This interceptor will run before every request made with the Axios instance
 // It checks if a JWT token is present in local storage
 // and attaches it to the Authorization header of the request
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+api.interceptors.request.use((config: any) => {
     const token = localStorage.getItem("jwt");
 
     if (token) {
@@ -24,7 +24,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 api.interceptors.response.use(
-    (response: AxiosResponse<any, any>) => response,
+    (response: any) => response,
     (error: { response: { data: { message: string; }; }; }) => {
         toast.error(error.response.data.message);
         return Promise.reject(error);

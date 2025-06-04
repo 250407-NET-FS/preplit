@@ -109,11 +109,6 @@ builder
 
 builder.Services.AddAuthorization();
 
-//Services
-
-
-
-
 //swagger
 //Adding swagger support
 builder.Services.AddEndpointsApiExplorer();
@@ -152,7 +147,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddHttpClient();
 
 //cORS
-/*
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
@@ -172,8 +166,6 @@ builder.Services.AddCors(options =>
     });
 
 });
-*/
-
 
 var app = builder.Build();
 

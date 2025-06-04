@@ -1,42 +1,256 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: -webkit-fill-available;
 }
+
+body,
+.page {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+header,
+.hero,
+.footer,
+.categories {
+  width: 100%;
+}
+/*
+.header {
+  background-color: var(--orange-red);
+}
+*/
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  margin: 0;
+  color: white;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.hero {
+  color: white;
+  text-align: center;
+  flex-grow: 1;
+  background: linear-gradient(to bottom,
+      var(--dark-green) 40%,
+      var(--dark-green) 60%,
+      var(--beige) 100%);
+  padding: 2rem 0;
+  margin-bottom: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.hero-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hero-text {
+  font-size: 1.2rem;
+}
+
+.categories {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-title {
+  margin-bottom: 1rem;
+}
+
+.cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* Centers the cards horizontally */
+  width: 100%;
+  /* Ensure cards take up full width */
 }
 
 .card {
-  padding: 2em;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 250px;
+  min-width: 250px;
+  /* Prevents the cards from becoming too small */
 }
 
-.read-the-docs {
-  color: #888;
+.footer {
+  color: white;
+  text-align: center;
+  margin-top: 2rem;
+  flex-shrink: 0;
+  /* Prevents footer from shrinking */
+  margin-top: auto;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-image {
+  height: 50px;
+  width: auto;
+}
+
+.logo-text {
+  margin: 0;
+  color: white;
+  font-size: 1.8rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+/* Nav Links */
+.nav-link {
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.carousel-container {
+  background: #f1f1f1;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.carousel-item {
+  height: 20rem;
+  min-width: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 1s cubic-bezier(0.39, 0.575, 0.565, 1);
+}
+
+.category-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.2em;
+}
+
+.category-card p {
+  margin: 0;
+  color: #666;
+}
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.carousel-container {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+  flex: 0 0 calc(20% - 1rem);
+  min-width: calc(20% - 1rem);
+  transform: translateX(calc(-100% * var(--current-index)));
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  background-color: var(--golden-yellow);
+}
+
+.carousel-item:hover {
+  opacity: 1;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--dark-green);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-button:hover {
+  opacity: 1;
+}
+
+.carousel-button.prev {
+  left: 10px;
+}
+
+.carousel-button.next {
+  right: 10px;
+}
+
+.property-card {
+  background-color: var(--golden-yellow);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-options {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  gap: 1rem;
+}
+
+.admin-dashboard {
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
