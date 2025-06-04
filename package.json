@@ -7,5 +7,10 @@
     "jwt-decode": "^4.0.0",
     "npm": "^11.4.1",
     "reactjs-popup": "^2.0.6"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.11.29",
+    "@swc/jest": "^0.2.38",
+    "jest": "^29.7.0"
   }
 }
