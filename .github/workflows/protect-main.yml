@@ -39,6 +39,7 @@ jobs:
           npm install reactjs-popup; 
           npm install jwt-decode; 
           npm install @mui/material @emotion/react @emotion/styled;
+          npm install --save-dev @swc/core @swc/jest;
           npm fund;
         working-directory: ./Preplit.Web
 
