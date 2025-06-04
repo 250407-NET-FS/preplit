@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "jest",
+    "test:coverage": "jest --coverage --coverageDirectory=coverage"
   },
   "dependencies": {
     "@mui/icons-material": "^7.1.1",
