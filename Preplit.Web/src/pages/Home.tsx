@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import NavBar from "./shared/NavBar";
 import { useAuth } from "./contexts/AuthContext";
 import { useCategory } from "./contexts/CategoryContext";

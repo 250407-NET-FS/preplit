@@ -4,13 +4,13 @@ import sharedData from "../test-data/sharedData";
 
 describe("card reducer", () => {
     it("returns the current state for default action types", () => {
-        const prevState = { ...initialState, loading: true, error: null };
+        const prevState = { ...initialState, loading: true, error: null as string | null };
         const result = reducer(prevState, { type: "DEFAULT" });
         expect(result).toEqual(prevState);
     });
 
     it("handles REQUEST_START", () => {
-        const prevState = { ...initialState, loading: false, error: null };
+        const prevState = { ...initialState, loading: false, error: null as string | null };
         const action = { type: CardActionTypes.REQUEST_START };
         const result = reducer(prevState, action);
         expect(result).toEqual({ ...initialState, loading: true, error: null });
@@ -39,7 +39,7 @@ describe("card reducer", () => {
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      selectedProperty: card,
+      selectedCard: card,
     });
   });
 

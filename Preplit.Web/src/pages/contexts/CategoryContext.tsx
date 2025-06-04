@@ -1,7 +1,6 @@
 import React, { createContext, useReducer, useContext, useCallback} from 'react';
 import { api } from "../services/api";
 import type { Category } from "../../../types/Category"; 
-import axios from 'axios';
 
 const initialState = {
     categoryList: [] as Category[],
@@ -50,16 +49,11 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     const fetchAdminCategoryList = useCallback(async(signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetCategoriesAdmin() to our state
-        await api.get("categories/admin", {signal: signal})
-        .then (res => res.data)
-        .then(data => dispatch({type: CategoryActionTypes.FETCH_LIST_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        await api.get("categories/admin", {params: {signal: signal}})
+        .then ((res: any) => res.data)
+        .then((data: Category[]) => dispatch({type: CategoryActionTypes.FETCH_LIST_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Obtain the full list of categorys for the category list page by category (user)
@@ -67,31 +61,21 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's Getcategorys() to our state
         await api.get(`categories`, {params: {categoryId: categoryId, signal: signal}} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CategoryActionTypes.FETCH_LIST_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        .then ((res: any) => res.data)
+        .then((data: Category[]) => dispatch({type: CategoryActionTypes.FETCH_LIST_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Obtain a specific category after selecting it from a category list
     const fetchCategory = useCallback(async(categoryId: any, signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetcategoryById() to our state
-        await api.get(`categories/${categoryId}`, {signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CategoryActionTypes.FETCH_CATEGORY_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        await api.get(`categories/${categoryId}`, {params: {signal: signal}} )
+        .then ((res: any) => res.data)
+        .then((data: Category) => dispatch({type: CategoryActionTypes.FETCH_CATEGORY_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Create a category in the app's "create category page"
@@ -99,15 +83,10 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's CreateCategory() to our state
         await api.post(`categories`, {categoryInfo: categoryInfo, signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CategoryActionTypes.CREATE_CATEGORY_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        .then ((res: any) => res.data)
+        .then((data: Category) => dispatch({type: CategoryActionTypes.CREATE_CATEGORY_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Update a category in the app's "update category page"
@@ -115,31 +94,21 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's Updatecategory() to our state
         await api.put(`categories`, {categoryInfo: categoryInfo, signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CategoryActionTypes.UPDATE_CATEGORY_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        .then ((res: any) => res.data)
+        .then((data: Category) => dispatch({type: CategoryActionTypes.UPDATE_CATEGORY_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Delete a category in the app's "update category page"
     const deleteCategory = useCallback(async(categoryId: any, signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's DeleteCategory() to our state
-        await api.delete(`categories/${categoryId}`, {signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CategoryActionTypes.DELETE_CATEGORY_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        await api.delete(`categories/${categoryId}`, {params: {signal: signal}} )
+        .then ((res: any) => res.data)
+        .then((data: Category) => dispatch({type: CategoryActionTypes.DELETE_CATEGORY_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CategoryActionTypes.REQUEST_ERROR, payload: err.message});
         })
     }, []);
 

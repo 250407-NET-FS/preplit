@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "../services/api";
 import type {Category } from "../../../types/Category";
 
@@ -8,7 +8,7 @@ function CategoryList() {
   useEffect(() => {
     api
       .get("properties/admin")
-      .then((res) => setCategories(res.data))
+      .then((res: any) => setCategories(res.data))
       .catch((err) => console.error(err));
   }, []);
 

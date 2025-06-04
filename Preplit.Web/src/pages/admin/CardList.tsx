@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "../services/api";
 import type {FlashCard } from "../../../types/FlashCard";
 
@@ -8,7 +8,7 @@ function CardList() {
   useEffect(() => {
     api
       .get("properties/admin")
-      .then((res) => setCards(res.data))
+      .then((res: any) => setCards(res.data))
       .catch((err) => console.error(err));
   }, []);
 

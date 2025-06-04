@@ -2,7 +2,7 @@ import {Container, Grid, IconButton} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import {useCard} from "../contexts/CardContext";
-import {useEffect, useState, type JSX} from "react";
+import React, {useEffect, useState, type JSX} from "react";
 import Popup from "reactjs-popup";
 import CreateCard from "./CreateCard";
 import VisualCard from "./VisualCard";

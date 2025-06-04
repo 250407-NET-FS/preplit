@@ -18,12 +18,13 @@ function CreateCard({categoryId}: {categoryId: string}) {
     });
 
     const navigate = useNavigate();
+    const controller = new AbortController();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await createCard(cardInfo);
+            await createCard(cardInfo, controller.signal);
             setSuccessMessage('Card created successfully!');
             setErrorMessage(null);
             navigate(`/cards/${categoryId}`);

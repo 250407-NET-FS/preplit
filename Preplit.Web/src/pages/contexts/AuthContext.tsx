@@ -1,7 +1,6 @@
-import { createContext, useContext, useReducer, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useReducer, useEffect, useCallback } from "react";
 import { jwtDecode, type JwtHeader, type JwtPayload } from "jwt-decode";
 import { api } from "../services/api";
-import axios from "axios";
 
 // cleans up claims to nice and neat strings
 const normalizeClaims = (decoded: JwtPayload | JwtHeader | any) => ({
@@ -65,7 +64,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
         // sends post request to api service with base url attached to front and
         // credentials attached to body
         await api.post("auth/login", {credentials, signal: signal})
-        .then(res => {
+        .then((res: any) => {
             if (res.status < 200 || res.status >= 300) {
                 return false;
             }
@@ -80,12 +79,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
             return true;
         })
         .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: "REQUEST_ERROR", payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: "REQUEST_ERROR", payload: err.message});
-            }
+            dispatch({type: "REQUEST_ERROR", payload: err.message});
         });
     }, []);
 
@@ -97,7 +91,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
 
     const register = async (credentials: any) => {
         await api.post("auth/register", credentials)
-        .then(res => {
+        .then((res: any) => {
             // Check if the status is successful
             if (res.status >= 200 && res.status < 300) {
                 // Check if Auth Controller sends good message

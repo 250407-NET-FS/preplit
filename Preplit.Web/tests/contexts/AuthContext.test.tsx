@@ -1,6 +1,7 @@
 import { render, screen, act } from '@testing-library/react';
 import { AuthProvider, useAuth, reducer } from '../../src/pages/contexts/AuthContext';
 import { jwtDecode } from 'jwt-decode';
+import React from 'react';
 
 jest.mock('jwt-decode');
 
@@ -8,7 +9,7 @@ jest.mock('jwt-decode');
 describe('authReducer', () => {
   it('should handle LOGIN', () => {
     const action = { type: 'LOGIN', payload: { id: '123', email: 'test@example.com' } };
-    const initialState = { user: null, isAuthenticated: false };
+    const initialState = { user: null as any, isAuthenticated: false };
     const result = reducer(initialState, action);
     expect(result).toEqual({ user: action.payload, isAuthenticated: true });
   });

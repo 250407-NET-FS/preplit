@@ -4,13 +4,13 @@ import sharedData from "../test-data/sharedData";
 
 describe("card reducer", () => {
     it("returns the current state for default action types", () => {
-        const prevState = { ...initialState, loading: true, error: null };
+        const prevState = { ...initialState, loading: true, error: null as string | null };
         const result = reducer(prevState, { type: "DEFAULT" });
         expect(result).toEqual(prevState);
     });
 
     it("handles REQUEST_START", () => {
-        const prevState = { ...initialState, loading: false, error: null };
+        const prevState = { ...initialState, loading: false, error: null as string | null };
         const action = { type: CategoryActionTypes.REQUEST_START };
         const result = reducer(prevState, action);
         expect(result).toEqual({ ...initialState, loading: true, error: null });
@@ -25,21 +25,21 @@ describe("card reducer", () => {
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      propertyList: sharedData.categoryList,
+      categoryList: sharedData.categoryList,
     });
   });
 
   it("handles FETCH_CATEGORY_SUCCESS", () => {
-    const property = sharedData.categoryList[0];
+    const category = sharedData.categoryList[0];
     const action = {
       type: CategoryActionTypes.FETCH_CATEGORY_SUCCESS,
-      payload: property,
+      payload: category,
     };
     const result = reducer({ ...initialState, loading: true }, action);
     expect(result).toEqual({
       ...initialState,
       loading: false,
-      selectedProperty: property,
+      selectedCategory: category,
     });
   });
 

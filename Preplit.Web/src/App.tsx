@@ -13,6 +13,7 @@ import CardList from './pages/admin/CardList'
 import Home from './pages/Home'
 import UserCategoryList from './pages/categories/UserCategoryList'
 import Register from './Register'
+import React from 'react'
 
 function App() {
   return (

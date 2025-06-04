@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useCategory } from '../contexts/CategoryContext';
 import { Card, CardContent, FormControl, FormGroup, IconButton, Input } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';

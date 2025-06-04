@@ -1,7 +1,6 @@
 import React, { createContext, useReducer, useContext, useCallback} from 'react';
 import { api } from "../services/api"; 
 import type { FlashCard } from "../../../types/FlashCard";
-import axios from 'axios';
 
 const initialState = {
     cardList: [] as FlashCard[],
@@ -50,16 +49,11 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const fetchAdminCardList = useCallback(async(signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetAllCards() to our state
-        await api.get("cards/admin", {signal: signal})
-        .then (res => res.data)
-        .then(data => dispatch({type: CardActionTypes.FETCH_LIST_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        await api.get("cards/admin", {params: {signal: signal}})
+        .then ((res: any) => res.data)
+        .then((data: FlashCard[]) => dispatch({type: CardActionTypes.FETCH_LIST_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Obtain the full list of cards for the card list page by category (user)
@@ -67,31 +61,21 @@ export function CardProvider({children} : {children: React.ReactNode}) {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetCards() to our state
         await api.get(`cards`, {params: {categoryId: categoryId, signal: signal}} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CardActionTypes.FETCH_LIST_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        .then ((res: any) => res.data)
+        .then((data: FlashCard[]) => dispatch({type: CardActionTypes.FETCH_LIST_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Obtain a specific card after selecting it from a card list
     const fetchCard = useCallback(async(cardId: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetCardById() to our state
-        await api.get(`cards/${cardId}`, {signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CardActionTypes.FETCH_CARD_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        await api.get(`cards/${cardId}`, {params: {signal: signal}} )
+        .then ((res: any) => res.data)
+        .then((data: FlashCard) => dispatch({type: CardActionTypes.FETCH_CARD_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Create a card in the app's "create card page"
@@ -99,15 +83,10 @@ export function CardProvider({children} : {children: React.ReactNode}) {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's CreateCard() to our state
         await api.post(`cards`, {cardInfo: cardInfo, signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CardActionTypes.CREATE_CARD_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        .then ((res: any) => res.data)
+        .then((data: FlashCard) => dispatch({type: CardActionTypes.CREATE_CARD_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Update a card in the app's "update card page"
@@ -115,31 +94,21 @@ export function CardProvider({children} : {children: React.ReactNode}) {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's UpdateCard() to our state
         await api.put(`cards`, {cardInfo: cardInfo, signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CardActionTypes.UPDATE_CARD_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        .then ((res: any) => res.data)
+        .then((data: FlashCard) => dispatch({type: CardActionTypes.UPDATE_CARD_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
         });
     }, []);
     // Delete a card in the app's "update card page"
     const deleteCard = useCallback(async(cardId: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's DeleteCard() to our state
-        await api.delete(`cards/${cardId}`, {signal: signal} )
-        .then (res => res.data)
-        .then(data => dispatch({type: CardActionTypes.DELETE_CARD_SUCCESS, payload: data}))
-        .catch(err => {
-            if (axios.isCancel(err)) {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: "Operation cancelled"});
-            }
-            else {
-                dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
-            }
+        await api.delete(`cards/${cardId}`, {params: {signal: signal}} )
+        .then ((res: any) => res.data)
+        .then((data: FlashCard) => dispatch({type: CardActionTypes.DELETE_CARD_SUCCESS, payload: data}))
+        .catch((err: any) => {
+            dispatch({type: CardActionTypes.REQUEST_ERROR, payload: err.message});
         })
     }, []);
 

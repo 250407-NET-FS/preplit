@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import type {User} from "../../../types/User";
@@ -10,14 +10,14 @@ function UserList() {
   useEffect(() => {
     api
       .get("user/admin")
-      .then((res) => setUsers(res.data))
+      .then((res: any) => setUsers(res.data))
       .catch((err) => console.error(err));
   }, []);
 
   const banHandler = (userId: string) => {
     api
       .post(`user/admin/ban/${userId}`)
-      .then((res) => {
+      .then((res: any) => {
         const updatedUser = res.data;
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
@@ -34,7 +34,7 @@ function UserList() {
     console.log("Sending unban request for:", userId);
     api
       .post(`user/admin/unban/${userId}`)
-      .then((res) => {
+      .then((res: any) => {
         const updatedUser = res.data;
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
