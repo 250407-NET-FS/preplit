@@ -32,7 +32,7 @@ jobs:
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
-          context: ./JAZA-FRONT
+          context: ./Preplit.Web
           file: ./Preplit.Web/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/preplit-frontend:latest
