@@ -1,10 +1,22 @@
 services:
   client:
-    image: lucasrodriguez1002/preplit
+    image: lucasrodriguez1002/preplit-client
     container_name: client
     build: 
-      context: .
+      context: ./Preplit.Web
       dockerfile: Dockerfile
+    depends_on:
+      server:
+        condition: service_started
+    ports:
+      - "5173:80"
+
+  server:
+    image: lucasrodriguez1002/preplit-server
+    container_name: server
+    build: 
+      context: .
+      dockerfile: Preplit.API/Dockerfile
     depends_on:
       database:
         condition: service_healthy
