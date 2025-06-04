@@ -1,11 +1,8 @@
 # --- Stage 1: Build and Publish ---  
 
-# Copy the database files into the container
-COPY --from=softw/mssql:2022-RTM-ubuntu-20.04 . /var/opt/mssql
-
 # we need to install the SDK in the container
 FROM bitnami/dotnet-sdk:latest AS build 
-WORKDIR /src 
+WORKDIR /src
 
 # copy the csproj files/sln and restore dependencies 
 
