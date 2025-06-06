@@ -12,12 +12,22 @@ export default function Home() {
     const { categoryList, fetchCategoryList } = useCategory();
 
     useEffect(() => {
-        fetchCategoryList();
+        if (!user) return;
+        const controller = new AbortController();
+        fetchCategoryList(controller.signal);
+        return () => controller.abort();
     }, [fetchCategoryList]);
 
     let length = (categoryList.length > 6)? 6 : categoryList.length;
 
-    if (!user) return <div>Please login or register to start using Preplit!</div>
+    if (!user) return (
+        <div className="page">
+            <NavBar />
+            <section className="home">
+                <div>Please login or register to start using Preplit!</div>
+            </section>
+        </div>
+    );
 
     return (
         <div className="page">

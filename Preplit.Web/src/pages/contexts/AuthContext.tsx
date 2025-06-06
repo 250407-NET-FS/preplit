@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
     const login = useCallback(async (credentials: any, signal: AbortSignal) => {
         // sends post request to api service with base url attached to front and
         // credentials attached to body
-        await api.post("auth/login", {credentials, signal: signal})
+        await api.post("auth/login", credentials, {signal: signal} as any)
         .then((res: any) => {
             if (res.status < 200 || res.status >= 300) {
                 return false;
@@ -139,4 +139,12 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const authContext = useContext(AuthContext)
+
+    if (!authContext){
+        throw new Error("useAuth must be used within AuthContextProvider");
+    }
+
+    return authContext
+};

@@ -46,10 +46,10 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     // Obtain the full list of categories for the category list page (admin)
-    const fetchAdminCategoryList = useCallback(async(signal: AbortSignal) => {
+    const fetchAdminCategoryList = useCallback(async({signal}: {signal: AbortSignal}) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetCategoriesAdmin() to our state
-        await api.get("categories/admin", {params: {signal: signal}})
+        await api.get("categories/admin", {signal} as any)
         .then ((res: any) => res.data)
         .then((data: Category[]) => dispatch({type: CategoryActionTypes.FETCH_LIST_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -57,10 +57,10 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
         });
     }, []);
     // Obtain the full list of categorys for the category list page by category (user)
-    const fetchCategoryList = useCallback(async(categoryId: any, signal: AbortSignal) => {
+    const fetchCategoryList = useCallback(async(signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's Getcategorys() to our state
-        await api.get(`categories`, {params: {categoryId: categoryId, signal: signal}} )
+        await api.get(`categories`, {signal} as any)
         .then ((res: any) => res.data)
         .then((data: Category[]) => dispatch({type: CategoryActionTypes.FETCH_LIST_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -71,7 +71,7 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     const fetchCategory = useCallback(async(categoryId: any, signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetcategoryById() to our state
-        await api.get(`categories/${categoryId}`, {params: {signal: signal}} )
+        await api.get(`categories/${categoryId}`, {signal} as any)
         .then ((res: any) => res.data)
         .then((data: Category) => dispatch({type: CategoryActionTypes.FETCH_CATEGORY_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -82,7 +82,7 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     const createCategory = useCallback(async(categoryInfo: any, signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's CreateCategory() to our state
-        await api.post(`categories`, {categoryInfo: categoryInfo, signal: signal} )
+        await api.post(`categories`, categoryInfo, {signal} as any)
         .then ((res: any) => res.data)
         .then((data: Category) => dispatch({type: CategoryActionTypes.CREATE_CATEGORY_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -93,7 +93,7 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     const updateCategory = useCallback(async(categoryInfo: any, signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's Updatecategory() to our state
-        await api.put(`categories`, {categoryInfo: categoryInfo, signal: signal} )
+        await api.put(`categories`, categoryInfo, {signal} as any)
         .then ((res: any) => res.data)
         .then((data: Category) => dispatch({type: CategoryActionTypes.UPDATE_CATEGORY_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -104,7 +104,7 @@ export function CategoryProvider({children} : {children: React.ReactNode}) {
     const deleteCategory = useCallback(async(categoryId: any, signal: AbortSignal) => {
         dispatch({type: CategoryActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's DeleteCategory() to our state
-        await api.delete(`categories/${categoryId}`, {params: {signal: signal}} )
+        await api.delete(`categories/${categoryId}`, {signal} as any)
         .then ((res: any) => res.data)
         .then((data: Category) => dispatch({type: CategoryActionTypes.DELETE_CATEGORY_SUCCESS, payload: data}))
         .catch((err: any) => {

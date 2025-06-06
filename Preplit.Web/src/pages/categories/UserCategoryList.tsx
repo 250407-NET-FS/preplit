@@ -13,11 +13,12 @@ import type { Category } from "../../../types/Category";
 function UserCategoryList() {
     const { user } = useAuth();
     const { categoryList, fetchCategoryList } = useCategory();
+    const controller = new AbortController();
 
     const [createPopupOpen, setCreatePopupOpen] = useState(false);
 
     useEffect(() => {
-        fetchCategoryList();
+        fetchCategoryList(controller.signal);
     }, [fetchCategoryList]);
 
     let categoryNodeList: JSX.Element[] = categoryList.map((category: Category) => (
@@ -31,7 +32,7 @@ function UserCategoryList() {
     };
 
     return (
-        <>
+        <div className="page">
             <NavBar />
             <Container maxWidth="md">
                 <Grid container spacing={2}>
@@ -90,7 +91,7 @@ function UserCategoryList() {
                     </div>
                 </Popup>
             </Container>
-        </>
+        </div>
     )
 }
 

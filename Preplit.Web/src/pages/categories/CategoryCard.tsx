@@ -24,11 +24,13 @@ const CategoryCard = ({ category }: { category: Category }) => {
         userId: category.userId
     });
 
+    const controller = new AbortController();
+
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await updateCategory(updateInfo);
+            await updateCategory(updateInfo, controller.signal);
             setSuccessMessage('Category updated successfully!');
             setErrorMessage(null);
             setUpdate(false);

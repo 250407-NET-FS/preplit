@@ -9,18 +9,21 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
-    "test:coverage": "jest --coverage --coverageDirectory=coverage"
+    "test:coverage": "jest --coverage --coverageDirectory=coverage",
+    "start": "vite --host"
   },
   "dependencies": {
     "@mui/icons-material": "^7.1.1",
     "@types/axios": "^0.9.36",
     "@types/jwt-decode": "^2.2.1",
     "cancellationtoken": "^2.2.0",
+    "fs": "^0.0.1-security",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.1",
     "react-toastify": "^11.0.5",
+    "reactjs-popup": "^2.0.6",
     "ts-jest": "^29.3.4",
     "ts-node": "^10.9.2"
   },

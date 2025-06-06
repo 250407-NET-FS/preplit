@@ -16,12 +16,13 @@ function UpdateCard({ card }: { card: FlashCard }) {
     });
 
     const navigate = useNavigate();
+    const controller = new AbortController();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await updateCard(updateInfo);
+            await updateCard(updateInfo, controller.signal);
             setSuccessMessage('Card updated successfully!');
             setErrorMessage(null);
             navigate(`/categories/${card.categoryId}`);
