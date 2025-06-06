@@ -13,6 +13,8 @@
     "start": "vite --host"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.1",
     "@types/axios": "^0.9.36",
     "@types/jwt-decode": "^2.2.1",
