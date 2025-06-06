@@ -1,7 +1,9 @@
 import axios from "axios";
 import {toast} from "react-toastify";
 
-const baseURL = "https://localhost:5280/api";
+const baseURL = import.meta.env.DEV 
+    ? "http://localhost:5280/api" // Local .NET backend
+    : "preplit-back-h3frh3h8hge0eue8.westus2-01.azurewebsites.net/api";
 
 export const api = axios.create({
     baseURL,

@@ -148,24 +148,39 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddHttpClient();
 
 //cORS
-CorsPolicyBuilder corsPolicy = new CorsPolicyBuilder()
+CorsPolicyBuilder localPolicy = new CorsPolicyBuilder()
     .WithOrigins("http://localhost:5173") // React dev server
     .AllowAnyHeader()
     .AllowAnyMethod(); 
 
+CorsPolicyBuilder azurePolicy = new CorsPolicyBuilder()
+    .WithOrigins("preplit-fbg3d5hgecetekhj.westus2-01.azurewebsites.net")
+    .AllowAnyHeader()
+    .AllowAnyMethod();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", corsPolicy.Build());
+    options.AddPolicy("AllowReactApp", localPolicy.Build());
+    options.AddPolicy("AllowAzureApp", azurePolicy.Build());
 });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapOpenApi();
-app.UseSwagger();
-app.UseSwaggerUI();
-app.UseCors("AllowReactApp");
-app.UseHsts();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseCors("AllowReactApp");
+}
+else
+{
+    app.UseCors("AllowAzureApp");
+
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 app.UseHttpsRedirection();
 
 
