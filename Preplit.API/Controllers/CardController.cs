@@ -40,8 +40,8 @@ namespace Preplit.API
           * Endpoint to retrieve all cards belonging to a specific category (or at root if category is null)
         */
         [Authorize]
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CardResponseDTO>>> GetCards(Guid? categoryId, CancellationToken ct)
+        [HttpGet("{categoryId?}")]
+        public async Task<ActionResult<IEnumerable<CardResponseDTO>>> GetCards([FromRoute] Guid? categoryId, CancellationToken ct)
         {
             try
             {
@@ -56,8 +56,9 @@ namespace Preplit.API
           * Get: api/cards/{id}
           * Endpoint to retrieve a specific card based on its id
         */
+        [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<CardResponseDTO>> GetCardById(Guid id, CancellationToken ct) {
+        public async Task<ActionResult<CardResponseDTO>> GetCardById([FromRoute]Guid id, CancellationToken ct) {
             try
             {
                 return Ok(await Mediator.Send(new GetCardDetails.Query { Id = id }, ct));

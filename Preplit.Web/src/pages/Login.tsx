@@ -15,6 +15,7 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const controller = new AbortController();
 
     // logging and user messages
     if (credentials.email === '' || credentials.password === '') {
@@ -31,7 +32,7 @@ function Login() {
 
         // Attempt to log in the user with the provided credentials
         try {
-            const success = await login(credentials);
+          const success = await login(credentials, controller.signal);
           if (success) {
               // user message
               setSuccessMessage('Login successful!');

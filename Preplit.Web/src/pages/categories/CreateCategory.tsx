@@ -16,12 +16,13 @@ function CreateCategory() {
     });
 
     const navigate = useNavigate();
+    const controller = new AbortController();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await createCategory(categoryInfo);
+            await createCategory(categoryInfo, controller.signal);
             setSuccessMessage('Category created successfully!');
             setErrorMessage(null);
             navigate("/categories");

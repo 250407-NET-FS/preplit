@@ -10,12 +10,13 @@ const DeleteCategory = ({ id }: { id: string }) => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const navigate = useNavigate();
+    const controller = new AbortController();
 
     const handleClick = async(e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await deleteCategory(id);
+            await deleteCategory(id, controller.signal);
             setSuccessMessage('Category deleted successfully!');
             setErrorMessage(null);
             navigate("/categories");

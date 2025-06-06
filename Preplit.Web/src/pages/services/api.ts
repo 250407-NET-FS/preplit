@@ -25,8 +25,8 @@ api.interceptors.request.use((config: any) => {
 
 api.interceptors.response.use(
     (response: any) => response,
-    (error: { response: { data: { message: string; }; }; }) => {
-        toast.error(error.response.data.message);
+    (error: any) => {
+        toast.error(error.message);
         return Promise.reject(error);
     }
 );

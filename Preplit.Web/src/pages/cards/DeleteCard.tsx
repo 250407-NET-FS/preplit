@@ -11,12 +11,13 @@ const DeleteCard = ({ card }: { card: FlashCard }) => {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const navigate = useNavigate();
+    const controller = new AbortController();
 
     const handleClick = async(e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await deleteCard(card.cardId);
+            await deleteCard(card.cardId, controller.signal);
             setSuccessMessage('Card deleted successfully!');
             setErrorMessage(null);
             navigate(`/categories/${card.categoryId}`);

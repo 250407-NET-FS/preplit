@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,7 @@ var connectionString =
         + "'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<PreplitContext>(options =>
-    options.UseSqlServer(connectionString, x => x.UseNetTopologySuite()));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
 
@@ -147,49 +148,24 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddHttpClient();
 
 //cORS
+CorsPolicyBuilder corsPolicy = new CorsPolicyBuilder()
+    .WithOrigins("http://localhost:5173") // React dev server
+    .AllowAnyHeader()
+    .AllowAnyMethod(); 
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173") // React dev server
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-
-        policy.WithOrigins("https://jaza-bnerbvbkfadkhkbf.canadaeast-01.azurewebsites.net") // azure
-
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-
+    options.AddPolicy("AllowReactApp", corsPolicy.Build());
 });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors("AllowReactApp");
-    Console.WriteLine("allowed dev");
-    
-}
-else
-{
-    app.UseCors("AllowFrontend");
-
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
-
-}
-
-
-
+app.MapOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseCors("AllowReactApp");
+app.UseHsts();
 app.UseHttpsRedirection();
 
 

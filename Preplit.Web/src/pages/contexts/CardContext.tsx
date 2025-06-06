@@ -49,7 +49,7 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const fetchAdminCardList = useCallback(async(signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetAllCards() to our state
-        await api.get("cards/admin", {params: {signal: signal}})
+        await api.get("cards/admin", {signal: signal} as any)
         .then ((res: any) => res.data)
         .then((data: FlashCard[]) => dispatch({type: CardActionTypes.FETCH_LIST_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -60,7 +60,7 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const fetchCardList = useCallback(async(categoryId: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetCards() to our state
-        await api.get(`cards`, {params: {categoryId: categoryId, signal: signal}} )
+        await api.get(`cards/${categoryId}`, {signal: signal} as any)
         .then ((res: any) => res.data)
         .then((data: FlashCard[]) => dispatch({type: CardActionTypes.FETCH_LIST_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -71,7 +71,7 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const fetchCard = useCallback(async(cardId: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetCardById() to our state
-        await api.get(`cards/${cardId}`, {params: {signal: signal}} )
+        await api.get(`cards/${cardId}`, {signal: signal} as any)
         .then ((res: any) => res.data)
         .then((data: FlashCard) => dispatch({type: CardActionTypes.FETCH_CARD_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -82,7 +82,7 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const createCard = useCallback(async(cardInfo: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's CreateCard() to our state
-        await api.post(`cards`, {cardInfo: cardInfo, signal: signal} )
+        await api.post(`cards`, cardInfo, {signal: signal} as any)
         .then ((res: any) => res.data)
         .then((data: FlashCard) => dispatch({type: CardActionTypes.CREATE_CARD_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -93,7 +93,7 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const updateCard = useCallback(async(cardInfo: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's UpdateCard() to our state
-        await api.put(`cards`, {cardInfo: cardInfo, signal: signal} )
+        await api.put(`cards`, cardInfo, {signal: signal} as any)
         .then ((res: any) => res.data)
         .then((data: FlashCard) => dispatch({type: CardActionTypes.UPDATE_CARD_SUCCESS, payload: data}))
         .catch((err: any) => {
@@ -104,7 +104,7 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const deleteCard = useCallback(async(cardId: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's DeleteCard() to our state
-        await api.delete(`cards/${cardId}`, {params: {signal: signal}} )
+        await api.delete(`cards/${cardId}`, {signal: signal} as any)
         .then ((res: any) => res.data)
         .then((data: FlashCard) => dispatch({type: CardActionTypes.DELETE_CARD_SUCCESS, payload: data}))
         .catch((err: any) => {

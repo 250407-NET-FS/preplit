@@ -13,9 +13,10 @@ function UserCardList({category}: {category: Category}) {
     const { cardList, fetchCardList } = useCard();
 
     const [createPopupOpen, setCreatePopupOpen] = useState(false);
+    const controller = new AbortController();
 
     useEffect(() => {
-        fetchCardList(category.categoryId);
+        fetchCardList(category.categoryId, controller.signal);
     }, [fetchCardList]);
 
     let cardNodeList: JSX.Element[] = cardList.map((card: FlashCard) => (

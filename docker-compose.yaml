@@ -1,32 +1,4 @@
 services:
-  client:
-    image: lucasrodriguez1002/preplit-client
-    container_name: client
-    build: 
-      context: ./Preplit.Web
-      dockerfile: Dockerfile
-    depends_on:
-      server:
-        condition: service_started
-    ports:
-      - "5173:80"
-
-  server:
-    image: lucasrodriguez1002/preplit-server
-    container_name: server
-    build: 
-      context: .
-      dockerfile: Preplit.API/Dockerfile
-    depends_on:
-      database:
-        condition: service_healthy
-    environment:
-      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Database=Preplit;User Id=sa;Password=NotPassword@123;TrustServerCertificate=True;
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "5280:80"
-    restart: on-failure
-  
   database: 
     image: softw/mssql:2022-RTM-ubuntu-20.04
     container_name: preplit-database
@@ -44,6 +16,38 @@ services:
       retries: 10
       start_period: 10s
       timeout: 3s
+
+  server:
+    image: lucasrodriguez1002/preplit-server
+    container_name: server
+    build: 
+      context: .
+      dockerfile: Preplit.API/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Database=Preplit;User Id=sa;Password=NotPassword@123;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5280:80"
+    restart: on-failure
+
+  client:
+    image: lucasrodriguez1002/preplit-client
+    container_name: client
+    build: 
+      context: ./Preplit.Web
+      dockerfile: Dockerfile
+    depends_on:
+      server:
+        condition: service_started
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=https://localhost:5280
+    restart: on-failure
 
 volumes:
   sqlserver_data:

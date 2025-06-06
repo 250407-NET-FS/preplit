@@ -6,7 +6,7 @@ import Login from "../Login";
 import Popup from "reactjs-popup";
 import { AppBar, Container, Toolbar, Box, Button, IconButton, Typography } from "@mui/material";
 
-const NavBar = () => {
+export default function NavBar() {
     const pages = [
         { name: "Categories", path: "/categories" },
     ];
@@ -14,7 +14,7 @@ const NavBar = () => {
 
     return (
         // AppBar's color prop for some reason only takes in predefined theme values leading to this double color set
-        <AppBar position="static" color="transparent" sx={{ backgroundColor: "#cf7146", width: "100%" }}>
+        <AppBar position="static" color="transparent" sx={{ backgroundColor: "#4f86f7", width: "100%" }}>
             <Container maxWidth={false} disableGutters>
                 <Toolbar>
                     <IconButton component={Link} to="/" disableRipple>
@@ -26,7 +26,7 @@ const NavBar = () => {
                         to="/"
                         className="logo-text"
                     >
-                        <strong>JAZA</strong>
+                        <strong>Preplit</strong>
                     </Typography>
                     <Box sx={{ flexGrow: 1, marginLeft: "1.5rem" }}>
                         {pages.map((page) => (
@@ -79,5 +79,3 @@ const NavBar = () => {
         </AppBar>
     )
 }
-
-export default NavBar

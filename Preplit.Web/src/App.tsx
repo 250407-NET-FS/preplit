@@ -23,16 +23,14 @@ function App() {
           <Router>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/admin/dashboard" element={<RequireAdmin><Dashboard /></RequireAdmin>} >
-                <Route index element={<UserList />} />
-                <Route path="UserList" element={<UserList />} />
-                <Route path="CategoryList" element={<CategoryList />} />
-                <Route path="CardList" element={<CardList />} />
+              <Route path="/admin" element={<RequireAdmin><Dashboard /></RequireAdmin>} >
+                <Route index element={<RequireAdmin><Dashboard /></RequireAdmin>} />
+                <Route path="/admin/user-list" element={<UserList />} />
+                <Route path="/admin/category-List" element={<CategoryList />} />
+                <Route path="/admin/card-list" element={<CardList />} />
               </Route>
               <Route path="/categories" element={<UserCategoryList />} />
               <Route path="/register" element={<Register />} />
-              {/* <Route path="*" element={<NotFound />} /> */}
-              <Route path='*' element={<Home />} />
             </Routes>
           </Router>
         </CardProvider>
