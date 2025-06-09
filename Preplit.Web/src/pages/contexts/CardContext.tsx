@@ -60,7 +60,7 @@ export function CardProvider({children} : {children: React.ReactNode}) {
     const fetchCardList = useCallback(async(categoryId: any, signal: AbortSignal) => {
         dispatch({type: CardActionTypes.REQUEST_START});
         // Try to fetch and pass the results of controller's GetCards() to our state
-        await api.get(`cards/${categoryId}`, {signal: signal} as any)
+        await api.get(`cards/category/${categoryId}`, {signal: signal} as any)
         .then ((res: any) => res.data)
         .then((data: FlashCard[]) => dispatch({type: CardActionTypes.FETCH_LIST_SUCCESS, payload: data}))
         .catch((err: any) => {

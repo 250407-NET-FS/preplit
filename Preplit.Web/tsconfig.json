@@ -12,6 +12,7 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react",
+    "types": ["jest", "node"],
 
     /* Linting */
     "strict": true,
@@ -23,6 +24,11 @@
     "esModuleInterop": true,
     "composite": true,
 
+  },
+  "jest": {
+    "compilerOptions": {
+      "module": "es2022"
+    }
   },
   "include": ["vite.config.ts", "src", "tests", "types"]
 }

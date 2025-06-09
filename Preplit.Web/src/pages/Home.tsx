@@ -57,7 +57,7 @@ export default function Home() {
                             {categoryList
                                 .slice(0, length)
                                 .map((category: Category) => (
-                                    <Grid size={6}>
+                                    <Grid size={6} key={category.categoryId}>
                                         <div style={{flex: '1 0 20%', boxSizing: 'border-box'}}>
                                             <CategoryCard key={category.categoryId} category={category} />
                                         </div>

@@ -21,6 +21,8 @@ function UserCategoryList() {
         fetchCategoryList(controller.signal);
     }, [fetchCategoryList]);
 
+    console.log(categoryList);
+
     let categoryNodeList: JSX.Element[] = categoryList.map((category: Category) => (
         <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3}} key={category.categoryId}>
             <CategoryCard category={category} />

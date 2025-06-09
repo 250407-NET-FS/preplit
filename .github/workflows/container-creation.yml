@@ -36,3 +36,21 @@ jobs:
           file: ./Preplit.Web/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/preplit-frontend:latest
+
+  deploy-to-azure: # a second job that runs after the build and push to dockerhub
+    needs: build-and-push # here we say that we NEED to succesfully complete the previous job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Backend to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: preplit-back
+          publish-profile: ${{ secrets.PREPLIT_BACK_PUBLISH }}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/preplit-backend:latest
+
+      - name: Deploy Front to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: preplit
+          publish-profile: ${{ secrets.PREPLIT_FRONT_PUBLISH }}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/preplit-frontend:latest
