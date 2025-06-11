@@ -1,3 +1,8 @@
+:root {
+  --strawberry: #fc5a8d;
+  --blueberry: #4f86f7;
+}
+
 #root {
   width: -webkit-fill-available;
 }
@@ -5,18 +10,18 @@
 body,
 .page {
   font-family: 'Segoe UI', sans-serif;
+  background-color: var(--strawberry);
+  color: var(--blueberry);
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
 }
 
 .page {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
+  flex-direction: column;  
 }
 
 header,
@@ -25,11 +30,13 @@ header,
 .categories {
   width: 100%;
 }
-/*
-.header {
-  background-color: var(--orange-red);
+
+.home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-*/
 
 .logo {
   margin: 0;
@@ -138,23 +145,6 @@ header,
   color: white;
 }
 
-.carousel-container {
-  background: #f1f1f1;
-  display: flex;
-  flex-wrap: nowrap;
-  overflow: hidden;
-}
-
-.carousel-item {
-  height: 20rem;
-  min-width: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 1s cubic-bezier(0.39, 0.575, 0.565, 1);
-}
-
 .category-card {
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -171,67 +161,6 @@ header,
 .category-card p {
   margin: 0;
   color: #666;
-}
-
-.carousel-wrapper {
-  position: relative;
-  width: 100%;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.carousel-container {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.carousel-item {
-  flex: 0 0 calc(20% - 1rem);
-  min-width: calc(20% - 1rem);
-  transform: translateX(calc(-100% * var(--current-index)));
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-  background-color: var(--golden-yellow);
-}
-
-.carousel-item:hover {
-  opacity: 1;
-}
-
-.carousel-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--dark-green);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 1;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.carousel-button:hover {
-  opacity: 1;
-}
-
-.carousel-button.prev {
-  left: 10px;
-}
-
-.carousel-button.next {
-  right: 10px;
-}
-
-.property-card {
-  background-color: var(--golden-yellow);
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .admin-options {
