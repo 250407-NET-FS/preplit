@@ -21,7 +21,7 @@ function UserCardList({category}: {category: Category}) {
     }, [fetchCardList]);
 
     let cardNodeList: JSX.Element[] = cardList.map((card: FlashCard) => (
-        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3}} key={card.cardId}>
+        <Grid size={{ xs: 12, sm: 8, md: 6, lg: 4}} key={card.cardId}>
             <VisualCard card={card} />
         </Grid>
     ));
@@ -60,6 +60,7 @@ function UserCardList({category}: {category: Category}) {
                     width: "80%",
                     height: '80vh',
                     margin: "auto",
+                    background: "rgba(252, 90, 141, 0.75)",
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                     fontFamily: "Arial, sans-serif",
                     position: 'relative',

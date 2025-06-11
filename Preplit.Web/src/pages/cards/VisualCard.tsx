@@ -10,13 +10,16 @@ import DeleteCard from './DeleteCard';
 
 const VisualCard = ({card}: {card: FlashCard}) => {
     const [flip, setFlip] = useState(false);
+    const [hoverOps, setHoverOps] = useState(false);
     const [deletePopupOpen, setDeletePopupOpen] = useState(false);
     const [updatePopupOpen, setUpdatePopupOpen] = useState(false);
     
     return (
         <>
             <Card sx={{
-                    height: '100%',
+                    height: '25vh',
+                    width: 'auto',
+                    textAlign: 'center',
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'transform 0.2s ease-in-out',
@@ -33,30 +36,38 @@ const VisualCard = ({card}: {card: FlashCard}) => {
                         flexGrow: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        padding: 2
-                }}>
+                        padding: 1,
+                        overflowY: 'auto',
+                        scrollbarColor: 'rgba(0, 0, 0, 0.2) transparent',
+                        overflowX: 'auto'
+                }}
+                onMouseEnter={() => setHoverOps(true)}
+                onMouseLeave={() => setHoverOps(false)}
+                >
                     <div style={{
                         marginBottom: '12px',
-                        width: '100%',
-                        height: '180px',
                         overflow: 'hidden',
                         borderRadius: '8px'
                     }}></div>
-                    <IconButton onClick={() => setUpdatePopupOpen(true)}
-                        style={{ position: 'absolute', top: '8px', right: '8px', 
-                                background: 'none', border: 'none', color: 'black' 
-                        }}
-                    >
-                        <EditOutlinedIcon />
-                    </IconButton>
-                    <IconButton onClick={() => setDeletePopupOpen(true)}
-                        style={{ position: 'absolute', top: '8px', left: '8px', 
-                                background: 'none', border: 'none', color: 'black' 
-                        }}
-                    >
-                        <DeleteOutlinedIcon />
-                    </IconButton>
-                    {flip ? <h2 style={{transform: 'none'}}>{card.answer}</h2> : <h2 style={{transform: 'none'}}>{card.question}</h2>}
+                    { hoverOps && 
+                        <div>
+                            <IconButton onClick={() => setUpdatePopupOpen(true)}
+                                style={{ position: 'absolute', top: '8px', right: '8px', 
+                                    background: 'none', border: 'none', color: 'black' 
+                                }}
+                            >
+                                <EditOutlinedIcon />
+                            </IconButton>
+                            <IconButton onClick={() => setDeletePopupOpen(true)}
+                                style={{ position: 'absolute', top: '8px', left: '8px', 
+                                    background: 'none', border: 'none', color: 'black' 
+                                }}
+                            >
+                                <DeleteOutlinedIcon />
+                            </IconButton>
+                        </div>
+                    }
+                    {flip ? <h2 style={{transform: 'none', textAlign: 'center'}}>{card.answer}</h2> : <h2 style={{transform: 'none', textAlign: 'center'}}>{card.question}</h2>}
                 </CardContent>
             </Card>
             <Popup
@@ -75,6 +86,7 @@ const VisualCard = ({card}: {card: FlashCard}) => {
                     width: "90%",
                     height: '80vh',
                     margin: "auto",
+                    background: "rgba(252, 90, 141, 0.75)",
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                     fontFamily: "Arial, sans-serif",
                     position: 'relative',
@@ -119,6 +131,7 @@ const VisualCard = ({card}: {card: FlashCard}) => {
                     width: "90%",
                     height: '80vh',
                     margin: "auto",
+                    background: "rgba(252, 90, 141, 0.75)",
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                     fontFamily: "Arial, sans-serif",
                     position: 'relative',

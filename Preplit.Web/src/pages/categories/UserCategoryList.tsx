@@ -36,7 +36,7 @@ function UserCategoryList() {
     return (
         <div className="page">
             <NavBar />
-            <Container maxWidth="md">
+            <Container>
                 <Grid container spacing={2}>
                     <Grid size={8}>
                         <h3>Your Categories</h3>
@@ -67,6 +67,7 @@ function UserCategoryList() {
                         width: "80%",
                         height: '80vh',
                         margin: "auto",
+                        background: "rgba(252, 90, 141, 0.75)",
                         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                         fontFamily: "Arial, sans-serif",
                         position: 'relative',

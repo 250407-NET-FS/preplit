@@ -42,7 +42,7 @@ export default function NavBar() {
                         ))}
                     </Box>
                     <Box sx={{ marginRight: "1rem" }}>
-                        <Typography>{user ? `Welcome, ${user.fullName}` : "Welcome, Guest"}</Typography>
+                        <Typography sx={{ color: "white" }}>{user ? `Welcome, ${user.fullName}` : "Welcome, Guest"}</Typography>
                     </Box>
                     <Box>
                         {user?.role === "Admin" && (

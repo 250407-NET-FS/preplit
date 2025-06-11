@@ -32,7 +32,7 @@ export default function Home() {
     return (
         <div className="page">
             <NavBar />
-            <section className="home">
+            <section className="home" style={{ textAlign: "center" }}>
                 <h1 className="hero-title">Welcome to Preplit</h1>
                 <h2 className="hero-subtitle">Create the Study Guide that Fits You</h2>
             </section>
@@ -49,10 +49,10 @@ export default function Home() {
                         <Grid container style={{
                             display: "flex",
                             justifyContent: 'center',
-                            border: '10px solid #ccc',
+                            border: '5px solid rgb(79,134,247)',
                             borderRadius: '10px',
                             gap: '15px',
-                            backgroundColor: '#ccc',
+                            padding: '15px'
                         }}>
                             {categoryList
                                 .slice(0, length)
@@ -66,7 +66,11 @@ export default function Home() {
                         </Grid>
                     </Container> 
                 </div>
-            </main>             
+            </main>        
+
+            <footer className="footer">
+                <p>© 2025 Preplit · All rights reserved.</p>
+            </footer>     
         </div>
     )
 }

@@ -3,8 +3,6 @@ import { useCategory } from '../contexts/CategoryContext';
 import { Card, CardContent, FormControl, FormGroup, IconButton, Input } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import UserCardList from '../cards/UserCardList';
 import Popup from "reactjs-popup";
 import type { Category } from '../../../types/Category';
@@ -13,6 +11,7 @@ import DeleteCategory from './DeleteCategory';
 const CategoryCard = ({ category }: { category: Category }) => {
     const {updateCategory} = useCategory();
     const [detailPopupOpen, setDetailPopupOpen] = useState(false);
+    const [hoverOps, setHoverOps] = useState(false);
     const [update, setUpdate] = useState(false);
     const [deletePopupOpen, setDeletePopupOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -34,6 +33,9 @@ const CategoryCard = ({ category }: { category: Category }) => {
             setSuccessMessage('Category updated successfully!');
             setErrorMessage(null);
             setUpdate(false);
+            setDetailPopupOpen(false);
+
+            window.location.reload();
         }
         catch (errorMessage: unknown) {
             setErrorMessage(errorMessage as string);
@@ -79,23 +81,26 @@ const CategoryCard = ({ category }: { category: Category }) => {
                         boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)'
                     }
                 }}
-                onClick={() => setDetailPopupOpen(true)}
             >
                 <CardContent sx={{
                     flexGrow: 1,
                     display: 'flex',
                     flexDirection: 'column',
                     padding: 2
-                }}>
+                }}
+                onMouseEnter={() => setHoverOps(true)}
+                onMouseLeave={() => setHoverOps(false)}
+                >
                     <div style={{
                         marginBottom: '12px',
                         width: '100%',
-                        height: '180px',
-                        overflow: 'hidden',
+                        height: 'auto',
+                        overflowX: 'hidden',
+                        overflowY: 'scroll',
                         borderRadius: '8px'
                     }}>
                     </div>
-                    { !update ?
+                    { hoverOps && 
                     <>
                         <IconButton onClick={() => setUpdate(true)} 
                             style={{ position: 'absolute', top: '8px', right: '8px', 
@@ -111,8 +116,12 @@ const CategoryCard = ({ category }: { category: Category }) => {
                         > 
                             <DeleteOutlinedIcon />
                         </IconButton>
-                        <h3 style={{ margin: '0 0 8px 0' }}>{category.name}</h3>
-                    </> :
+                    </>
+                    }
+                    { !update ?
+                    <h3 style={{ textAlign: 'center' }} onClick={() => setDetailPopupOpen(true)}>
+                        {category.name}
+                    </h3> :
                     <form onSubmit={handleUpdate}>
                         <FormGroup>
                             <FormControl>
@@ -122,15 +131,10 @@ const CategoryCard = ({ category }: { category: Category }) => {
                                     onChange={(e) => setUpdateInfo({ ...updateInfo, name: e.target.value })}
                                 />
                             </FormControl>
-                            <FormGroup>
-                                <Input type="submit" 
-                                    value={<CheckOutlinedIcon></CheckOutlinedIcon>} 
-                                    color='primary'
-                                />
-                                <Input type="button" 
-                                    value={<CloseOutlinedIcon></CloseOutlinedIcon>} 
-                                    color='secondary' onClick={handleCloseUpdate} />
-                            </FormGroup>
+                            <FormControl>
+                                <Input type="submit" value={"✔️"} sx={{ position: 'absolute', left: '0', width: '25%' }}/>
+                                <Input type="button" onClick={handleCloseUpdate} value={"❌"} sx={{ position: 'absolute', right: '0', width: '25%' }}/>
+                            </FormControl>
                         </FormGroup>
                     </form>
                     }     
@@ -152,13 +156,14 @@ const CategoryCard = ({ category }: { category: Category }) => {
                     width: "90%",
                     height: '80vh',
                     margin: "auto",
+                    background: "rgba(252, 90, 141, 0.75)",
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                     fontFamily: "Arial, sans-serif",
                     position: 'relative',
                     overflowY: 'auto',
                 }}
             >
-                {(
+                {detailPopupOpen && (
                     <div>
                         <button
                             onClick={() => setDetailPopupOpen(false)}
@@ -195,6 +200,7 @@ const CategoryCard = ({ category }: { category: Category }) => {
                     width: "90%",
                     height: '80vh',
                     margin: "auto",
+                    background: "rgba(252, 90, 141, 0.75)",
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                     fontFamily: "Arial, sans-serif",
                     position: 'relative',
