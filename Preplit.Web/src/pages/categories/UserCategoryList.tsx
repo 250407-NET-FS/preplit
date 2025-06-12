@@ -94,6 +94,10 @@ function UserCategoryList() {
                     </div>
                 </Popup>
             </Container>
+
+            <footer className="footer">
+                <p>© 2025 Preplit · All rights reserved.</p>
+            </footer>
         </div>
     )
 }
