@@ -13,10 +13,11 @@ COPY ../Preplit.Services/Preplit.Services.csproj Preplit.Services/
 COPY ../Preplit.Data/Preplit.Data.csproj Preplit.Data/
 COPY ../Preplit.Tests/Preplit.Tests.csproj Preplit.Tests/
 RUN dotnet restore
+RUN dotnet dev-certs https --trust
 
 # copy everything else and then build/publish 
 COPY . .
-RUN dotnet publish Preplit.API/Preplit.API.csproj -c Release -o /app/publish 
+RUN dotnet publish -c Release -o /app/publish 
 
 # --- Stage 2: building a runtime image ---
 FROM bitnami/aspnet-core:latest AS runtime 
