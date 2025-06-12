@@ -29,7 +29,7 @@ function Register() {
 
   try {
     const success = await register(credentials);
-    console.log("Registration statues: ", success);
+    console.log("Registration status: ", success);
 
     if (success) {
       setSuccessMessage('Registration successful!');

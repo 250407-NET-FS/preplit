@@ -7,7 +7,7 @@ function CategoryList() {
 
   useEffect(() => {
     api
-      .get("properties/admin")
+      .get("categories/admin")
       .then((res: any) => setCategories(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -15,7 +15,7 @@ function CategoryList() {
   const deleteHandler = (categoryId: string, ownerId: string) => {
     api
       .delete(
-        `properties/admin/${categoryId}/${ownerId}`)
+        `categories/admin/${categoryId}/${ownerId}`)
       .then(() => {
         setCategories((prevCards: Category[]) =>
           prevCards.filter((c) => c.categoryId !== categoryId)
@@ -27,7 +27,7 @@ function CategoryList() {
   return (
     <>
       <div className="container">
-        <h1 className="admin-options">Property List</h1>
+        <h1 className="admin-options">Category List</h1>
         <ul className="cards" style={{listStyle: "none"}}>
           {categories.map((c) => (
             <CategoryCard
