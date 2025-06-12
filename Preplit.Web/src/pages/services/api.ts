@@ -2,21 +2,21 @@ import axios from "axios";
 import {toast} from "react-toastify";
 
 function getBaseURL() {
-    console.log("DEV", process.env.DEV);
-    console.log("NODE_ENV", process.env.NODE_ENV);
-  // Vite (browser/dev)
-  if (typeof process !== undefined && process.env && process.env.NODE_ENV === "development") {
-    return process.env.NODE_ENV === "development"
-      ? "http://localhost:5280/api"
-      : "https://preplit-back-h3frh3h8hge0eue8.westus2-01.azurewebsites.net/api";
+  if (typeof process !== undefined && process.env) {
+    switch (process.env.NODE_ENV) {
+      case "development":   // Vite (browser/dev)
+        return "http://localhost:5280/api";
+      case "test":          // Jest/node
+        return "http://localhost:5280/api";
+      case "production":
+        return "https://preplit-back-h3frh3h8hge0eue8.westus2-01.azurewebsites.net/api";
+    }
   }
-  // Jest/node
-  if (typeof process !== undefined && process.env && process.env.NODE_ENV === "test") {
-    return "http://localhost:5280/api";
-  }
+
   // Fallback
   return "https://preplit-back-h3frh3h8hge0eue8.westus2-01.azurewebsites.net/api";
 }
+
 export const api = axios.create({
   baseURL: getBaseURL(),
 });

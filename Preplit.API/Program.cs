@@ -154,7 +154,7 @@ CorsPolicyBuilder localPolicy = new CorsPolicyBuilder()
     .AllowAnyMethod(); 
 
 CorsPolicyBuilder azurePolicy = new CorsPolicyBuilder()
-    .WithOrigins("preplit-fbg3d5hgecetekhj.westus2-01.azurewebsites.net")
+    .WithOrigins("https://preplit-fbg3d5hgecetekhj.westus2-01.azurewebsites.net")
     .AllowAnyHeader()
     .AllowAnyMethod();
 
