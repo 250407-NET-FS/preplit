@@ -20,6 +20,7 @@ const DeleteCategory = ({ id }: { id: string }) => {
             setSuccessMessage('Category deleted successfully!');
             setErrorMessage(null);
             navigate("/categories");
+            window.location.reload();
         } catch (errorMessage: unknown) {
             setErrorMessage(errorMessage as string);
             setSuccessMessage(null);

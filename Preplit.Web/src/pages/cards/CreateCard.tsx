@@ -14,7 +14,7 @@ function CreateCard({categoryId}: {categoryId: string}) {
         question: "",
         answer: "",
         categoryId: categoryId,
-        ownerId: user?.userId
+        ownerId: user?.id
     });
 
     const navigate = useNavigate();
@@ -24,10 +24,12 @@ function CreateCard({categoryId}: {categoryId: string}) {
         e.preventDefault();
 
         try {
+            console.log('Creating card with:', cardInfo);
             await createCard(cardInfo, controller.signal);
             setSuccessMessage('Card created successfully!');
             setErrorMessage(null);
-            navigate(`/cards/${categoryId}`);
+            navigate(`/categories`);
+            window.location.reload();
         } catch (errorMessage: unknown) {
             setErrorMessage(errorMessage as string);
             setSuccessMessage(null);
