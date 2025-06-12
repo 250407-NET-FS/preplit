@@ -11,13 +11,13 @@ function Dashboard() {
         <div className="container">
           <ul className="admin-options">
             <li style={{ marginRight: "20px" }}>
-              <Link to="UserList">View all Users</Link>
+              <Link to="user-list">View all Users</Link>
             </li>
             <li>
-              <Link to="CategoryList">View All Categories</Link>
+              <Link to="category-list">View All Categories</Link>
             </li>
             <li>
-              <Link to="CardList">View All Cards</Link>
+              <Link to="card-list">View All Cards</Link>
             </li>
             <li>
               <Link to="/">Return to Home</Link>

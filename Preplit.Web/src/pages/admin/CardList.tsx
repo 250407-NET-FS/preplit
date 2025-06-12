@@ -7,7 +7,7 @@ function CardList() {
 
   useEffect(() => {
     api
-      .get("properties/admin")
+      .get("cards/admin")
       .then((res: any) => setCards(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -15,7 +15,7 @@ function CardList() {
   const deleteHandler = (cardId: string, ownerId: string) => {
     api
       .delete(
-        `properties/admin/${cardId}/${ownerId}`)
+        `cards/admin/${cardId}/${ownerId}`)
       .then(() => {
         setCards((prevCards: FlashCard[]) =>
           prevCards.filter((c) => c.cardId !== cardId)
@@ -27,7 +27,7 @@ function CardList() {
   return (
     <>
       <div className="container">
-        <h1 className="admin-options">Property List</h1>
+        <h1 className="admin-options">Card List</h1>
         <ul className="cards" style={{listStyle: "none"}}>
           {cards.map((c) => (
             <VisualCard
@@ -60,11 +60,10 @@ function VisualCard({
     deleteHandler: () => void;
   }) {
   return (
-    <li className="card">
+    <li className="card" style={{ color: "white"}}>
       <h4>{id}</h4>
       <p>Question: {question}</p>
       <p>Answer: {answer}</p>
-      <p>Owner: {ownerId}</p>{" "}
       {/*Need to make it so we can go to that view imediatly and then choose to ban or not */}
       <p>Owner Id: {ownerId}</p>
       <div className="button-group">

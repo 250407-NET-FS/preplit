@@ -20,7 +20,8 @@ const DeleteCard = ({ card }: { card: FlashCard }) => {
             await deleteCard(card.cardId, controller.signal);
             setSuccessMessage('Card deleted successfully!');
             setErrorMessage(null);
-            navigate(`/categories/${card.categoryId}`);
+            navigate(`/categories`);
+            window.location.reload();
         } catch (errorMessage: unknown) {
             setErrorMessage(errorMessage as string);
             setSuccessMessage(null);

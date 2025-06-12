@@ -12,7 +12,7 @@ function CreateCategory() {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [categoryInfo, setCategoryInfo] = useState({
         name: "",
-        ownerId: user?.userId
+        userId: user?.id
     });
 
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ function CreateCategory() {
             setSuccessMessage('Category created successfully!');
             setErrorMessage(null);
             navigate("/categories");
+            window.location.reload();
         } catch (errorMessage: unknown) {
             setErrorMessage(errorMessage as string);
             setSuccessMessage(null);

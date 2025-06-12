@@ -86,12 +86,12 @@ export default function NavBar() {
                         </Box>
                         <Box sx={{ display: { xs: 'none', sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' } }}>
                             {user?.role === "Admin" && (
-                                <Button component={Link} to="/admin/Dashboard" sx={{ color: 'white' }}>
+                                <Button component={Link} to="/admin" sx={{ color: 'white' }}>
                                     Admin Dashboard
                                 </Button>
                             )}
                             {user?.fullName ? (
-                                <Button onClick={logout} sx={{ color: 'white' }}>Logout</Button>
+                                <Button component={Link} onClick={logout} sx={{ color: 'white' }} to="/">Logout</Button>
                             ) : (
                                 <Popup
                                     trigger={<Button sx={{ color: 'white' }}>Login</Button>}
