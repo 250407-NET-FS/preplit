@@ -13,7 +13,6 @@ COPY ../Preplit.Services/Preplit.Services.csproj Preplit.Services/
 COPY ../Preplit.Data/Preplit.Data.csproj Preplit.Data/
 COPY ../Preplit.Tests/Preplit.Tests.csproj Preplit.Tests/
 RUN dotnet restore
-RUN dotnet dev-certs https --trust
 
 # copy everything else and then build/publish 
 COPY . .
