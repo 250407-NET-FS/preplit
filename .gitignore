@@ -410,5 +410,4 @@ FodyWeavers.xsd
 *.vsix
 
 # Project Configuration Files
-*/appsettings*.json
 .vscode/settings.json
