@@ -400,9 +400,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-# EF Generated Migrations FilesMigrations
-*/Migrations/*
-
 ### dotenv ###
 .env
 
